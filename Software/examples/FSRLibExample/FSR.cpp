@@ -1,25 +1,26 @@
 #include "FSR.h"
 #include "Arduino.h"
 
-FSR_manager::FSR_manager(int analogport)
+FSRManager::FSRManager(int analogport)
 {
+	analogport = port;
 	analogRead(analogport);
-	analogport = FSR_port;
+	
 }
 
-int FSR_manager::kernel_FSR(int analog)
+int FSRManager::Kernel(int analog)
 {
 	return map(analog,0,1023,0,5);
 }
 
-int FSR_manager::FSR_current_value()
+int FSRManager::CurrentValue()
 {
-	return kernel_FSR(analogRead(FSR_port));
+	return Kernel(analogRead(port));
 }
 
-bool FSR_manager::state_of_button()
+bool FSRManager::StateOfButton()
 {
-	if(FSR_current_value() < button_level){
+	if(CurrentValue() < buttonLevel){
 		return true;
 	} 
 	else{
@@ -27,9 +28,9 @@ bool FSR_manager::state_of_button()
 	};
 }
 
-bool FSR_manager::FSR_is_pressed()
+bool FSRManager::IsPressed()
 {
-	return state_of_button();
+	return StateOfButton();
 }
 
 

@@ -1,16 +1,17 @@
 #ifndef FSR_H
 #define FSR_H
 
-class FSR_manager
+
+class FSRManager
 {
 	public:
-		FSR_manager(int analogport);
-		bool FSR_is_pressed();
-		int  FSR_current_value();
+		FSRManager(int analogport);
+		bool IsPressed();
+		int  CurrentValue();
 	private:
-		int FSR_port;
-		int kernel_FSR(int analog);
-		bool state_of_button();
-		const static int button_level = 2;
+		int port;
+		int Kernel(int analog);
+		bool StateOfButton();
+		const static int buttonLevel = 2;
 };
 #endif
