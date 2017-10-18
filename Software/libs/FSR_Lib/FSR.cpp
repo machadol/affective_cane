@@ -3,19 +3,19 @@
 
 FSRManager::FSRManager(int analogport)
 {
-	analogport = port;
-	analogRead(analogport);
+	this->port=analogport;
 	
 }
 
 int FSRManager::Kernel(int analog)
 {
-	return map(analog,0,1023,0,5);
+  return map(analog,0,1023,0,5);
+
 }
 
 int FSRManager::CurrentValue()
 {
-	return Kernel(analogRead(port));
+	return Kernel(analogRead(this->port));
 }
 
 bool FSRManager::StateOfButton()
