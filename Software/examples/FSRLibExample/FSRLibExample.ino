@@ -6,13 +6,15 @@
 FSRManager FSR(3);
 
 
-void setup() {
+void setup() 
+{
   // Seta o led do arduino como output
   pinMode(LED, OUTPUT);
   Serial.begin(9600);
 }
 
-void loop() {
+void loop()
+{
   // put your main code here, to run repeatedly:
 
   if(FSR.IsPressed())
