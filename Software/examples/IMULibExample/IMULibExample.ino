@@ -3,7 +3,7 @@
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
 // Changelog:
-//      2013-05-08 - added seamless Fastwire support
+//      2013-05-08 - added seamless Fas'tw'ire support
 //                 - added note about gyro calibration
 //      2012-06-21 - added note about Arduino 1.0.1 + Leonardo compatibility error
 //      2012-06-20 - improved FIFO overflow handling and simplified read process
@@ -50,6 +50,10 @@ THE SOFTWARE.
 #include "FSR.h"
 
 #include "TimerOne.h"
+
+#include "Ultrasonic.h"
+
+#include "DHT.h"
 
 //#include "MPU6050.h" // not necessary if using MotionApps include file
 
@@ -126,7 +130,7 @@ MPU6050 mpu;
 #define INTERRUPT_PIN 2  // use pin 2 on Arduino Uno & most boards
 #define LED_PIN 13 // (Arduino is 13, Teensy is 11, Teensy++ is 6)
 #define N 2 // Multiplicador de 1/2 segundo do periodo.
-#define Timer1Period  50000 * N
+#define Timer1Period  500000 * N
 bool blinkState = false;
 
 // MPU control/status vars
@@ -152,6 +156,11 @@ uint8_t teapotPacket[14] = { '$', 0x02, 0,0, 0,0, 0,0, 0,0, 0x00, 0x00, '\r', '\
 unsigned long timestamp = 0;
 FSRManager FSR(3);
 bool printFsrData = false;
+
+// Configuração DTH
+#define DHTPIN 3  
+#define DHTTYPE DHT22  
+DHT dht(DHTPIN, DHTTYPE);
 
 //Modifique aqui para desabilitar o print do FSR;
 bool enableFSRPrint = true;
@@ -183,7 +192,7 @@ void setup() {
     // join I2C bus (I2Cdev library doesn't do this automatically)
     #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
         Wire.begin();
-        Wire.setClock(400000); // 400kHz I2C clock. Comment this line if having compilation difficulties
+        //Wire.setClock(400000); // 400kHz I2C clock. Comment this line if having compilation difficulties
     #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
         Fastwire::setup(400, true);
     #endif
@@ -260,8 +269,9 @@ void setup() {
         Timer1.initialize(Timer1Period);         // initialize timer1, and set a 1/2 second period;
         Timer1.attachInterrupt(callback);  // attaches callback() as a timer overflow interrupt
     }
-
     
+    dht.begin();
+
 }
 
 
@@ -272,9 +282,10 @@ void setup() {
 
 void loop() {
 
-
+    
         if(printFsrData && enableFSRPrint)
         {
+            
             Serial.print("fsr\t");
             Serial.print(timestamp);
 
@@ -286,6 +297,14 @@ void loop() {
             {
                 Serial.println("\t0");
             }
+            
+            Serial.print("Umidade:"); 
+            Serial.print(dht.readHumidity());
+            Serial.print("%\t");
+            Serial.print("Temperatura:"); 
+            Serial.print(dht.readTemperature());
+            Serial.print("°C ");
+            Serial.print("\n\n");
 
             printFsrData = false;
         }
@@ -420,4 +439,5 @@ void loop() {
         blinkState = !blinkState;
         digitalWrite(LED_PIN, blinkState);
     }
+
 }
