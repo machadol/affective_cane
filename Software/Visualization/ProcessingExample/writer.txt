@@ -1,0 +1,30 @@
+import java.io.FileWriter;
+int num1=10;
+int num2=20;;
+String nome="Igor Araujo";
+ void writer(){
+FileWriter output = null;
+
+try {
+  output = new FileWriter("date.txt", true); //the true will append the new data
+  output.write(num1 + "\t");
+  output.write(num2 + "\t");
+  output.write(nome + "\t");
+}
+catch (IOException e) {
+  println("It Broke");
+  e.printStackTrace();
+}
+finally {
+  if (output != null) {
+    try {
+      output.close();
+    } catch (IOException e) {
+      println("Error while closing the writer");
+    }
+  }
+}
+//exit();}
+void draw(){
+writer();
+}
