@@ -297,7 +297,8 @@ void draw() {
              }
             if(pkg[0].equals("fsr"))
              {
-
+               timestamp = Integer.parseInt(pkg[1]);
+               FSRStatus = Integer.parseInt(pkg[2]);
                 //read package with fsr
                 hasNewData = true;
              }
