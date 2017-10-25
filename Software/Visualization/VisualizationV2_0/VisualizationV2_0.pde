@@ -373,6 +373,7 @@ void draw() {
     firstTimer = millis();
      bodyTemperature+=1.0;
      ambientTemperature +=1.0;
+     FSRStatus+= 1.0;
 
   }
 
