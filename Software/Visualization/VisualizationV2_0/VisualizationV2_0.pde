@@ -24,8 +24,8 @@ float yaw = 0.0;
 float roll = 0.0;
 float pitch = 0.0;
 boolean hasNewData = false;
-int timestamp;
-int FSRStatus;
+int timestamp = 0;
+int FSRStatus = 0;
 int serialPortTries = 2; //Number of tries to open the serial port
 float[] quat = {1.0,0.0,0.0,0.0};
 boolean serialPortIsOpen = false;
@@ -34,34 +34,54 @@ float ambientTemperature = 25.0;
 float AmbientTemp=0.0;
 int timeSince = 0;
 int firstTimer = 0;
+ FileWriter output;
 
-
+void OpenFile()
+{
+   String filePath;
+   int d = day();
+   int m = month();
+   int y = year();
+   int hour = hour();
+   int minute = minute();
+   
+   filePath = String.format("%s\\"+"%d-%d-%d"+"@"+"%d_%d.csv",dataPath(""),d,m,y,hour,minute);
+    
+    try {
+      output = new FileWriter(filePath, true); //the true will append the new data
+    }
+    catch (IOException e)
+   {
+      println("Error opening file.");
+      e.printStackTrace();
+    }
+    finally 
+    {
+       
+    }
+    
+    println("Output is in " + filePath);
+    try
+    {
+    output.write("timestamp;pitch;roll;yaw;FSRStatus\n\t");
+    }
+    catch(IOException e) {    }
+}
 
 void writer(){
-
-FileWriter output = null;
-
 try {
-  output = new FileWriter("date.txt", true); //the true will append the new data
-  output.write(pitch + "\t");
-  output.write(roll + "\t");
-  output.write(yaw + "\t");
-  output.write(timestamp + "\t");
-  output.write(FSRStatus + "\n");
+
+  output.write(timestamp + ";");
+  output.write(pitch + ";");
+  output.write(roll + ";");
+  output.write(yaw + ";");
+  output.write(FSRStatus + "\n\t");
 }
 catch (IOException e) {
-  println("It Broke");
+  println("Error Writing");
   e.printStackTrace();
 }
-finally {
-  if (output != null) {
-    try {
-      output.close();
-    } catch (IOException e) {
-      println("Error while closing the writer");
-    }
-  }
-}
+finally {}
 
 }
 
@@ -230,7 +250,7 @@ void setup() {
    }
 
   firstTimer = millis();
-
+  OpenFile();
 } // setup()
 
 ///////////////////////////////// //And initialize the boxes like this:
@@ -307,6 +327,7 @@ void draw() {
 
     if(!serialPortIsOpen)
     {
+     
         //Sensor box position and sensor
        if (mouseY<435){
           translate(0,0,512-mouseY);
@@ -334,13 +355,15 @@ void draw() {
     line(0,-150,0,0,0,0);
     line(0,150,0,0,0,0);
 
-    timeSince = millis();
+     timeSince = millis();
+     
 
     if(timeSince - firstTimer > 500)
   {
     firstTimer = millis();
      bodyTemperature+=1.0;
      ambientTemperature +=1.0;
+     
   }
 
 
@@ -352,7 +375,8 @@ void draw() {
     {
     ambientTemperature = 25.0;
     }
-
+    
+    timestamp = millis(); 
     }
   else
   {
@@ -396,5 +420,13 @@ void draw() {
 
   }
 
+void stop() 
+{
+   try {
+      output.close();
+    } catch (IOException e) {
+      println("Error while closing the writer");
+    }
+} 
 // ===============================================================
 
