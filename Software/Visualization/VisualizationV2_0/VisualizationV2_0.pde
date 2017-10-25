@@ -8,6 +8,7 @@ Changelog:
       -Insert the colors with temperature
       -put the limeited of the ground
       -make a method of the ground collors
+      -floor is changing with FSRStatus 
 */
 import processing.serial.*;
 import shapes3d.utils.*;
@@ -44,9 +45,9 @@ void OpenFile()
    int y = year();
    int hour = hour();
    int minute = minute();
-   
+
    filePath = String.format("%s\\"+"%d-%d-%d"+"@"+"%d_%d.csv",dataPath(""),d,m,y,hour,minute);
-    
+
     try {
       output = new FileWriter(filePath, true); //the true will append the new data
     }
@@ -55,11 +56,11 @@ void OpenFile()
       println("Error opening file.");
       e.printStackTrace();
     }
-    finally 
+    finally
     {
-       
+
     }
-    
+
     println("Output is in " + filePath);
     try
     {
@@ -158,7 +159,7 @@ void tempB(float temp){ // body temperature between 33 a 41
 
 
 void tempA(float ambientTemp){
-  
+
     // color definitions
     color plum = color (221,160,221);
     color crimson = color (220,20,60);
@@ -168,54 +169,54 @@ void tempA(float ambientTemp){
     color skyBlue = color (135,206,235);
     color red = color (255,0,0);
     color lightSlateGray = color (119,136,153);
-  
+
      // parte de puxar os dados da porta serial
-  
+
     //arrange of 25 until 40
-    
+
      if (24<ambientTemp && ambientTemp<=26.5)
       { background(skyBlue);
-       
+
       }
      else  if (26.5<ambientTemp && ambientTemp<=29)
       { background(plum);
-       
-  
+
+
       }
      else  if (29<ambientTemp && ambientTemp<=31.5)
       { background(crimson);
-       
-  
-  
+
+
+
           }
         else  if (31.5<ambientTemp && ambientTemp<=34)
       { background(salmon);
-       
-  
-  
+
+
+
       }
     else  if (34<ambientTemp && ambientTemp<=36.5)
-      { 
+      {
         background(lightSlateGray);
-       
+
       }
         else  if (36.5<ambientTemp && ambientTemp<=40)
-      { 
+      {
         background(skyBlue);
-  
+
       }
        else  if (40<ambientTemp && ambientTemp<=42.5)
-      { 
+      {
         background(red);
-  
+
       }
       else if(ambientTemp>42.5)
       {
-         background(0); 
+         background(0);
       }
       else if(ambientTemp<=24)
       {
-         background(255); 
+         background(255);
       }
   }
 
@@ -321,14 +322,22 @@ void draw() {
   //background(255);
   translate(300,500,-500);//initial position
   rotateX(radians(70));// initial rotation 70
-  fill(250);
+     
+  if (FSRStatus==1)
+    {
+    fill(0,255,255);
+    }
+    else
+    {
+    fill(255);
+    }
   box(600,500,50);
 
 
 
     if(!serialPortIsOpen)
     {
-     
+
         //Sensor box position and sensor
        if (mouseY<435){
           translate(0,0,512-mouseY);
@@ -357,27 +366,38 @@ void draw() {
     line(0,150,0,0,0,0);
 
      timeSince = millis();
-     
+
 
     if(timeSince - firstTimer > 500)
   {
     firstTimer = millis();
      bodyTemperature+=1.0;
      ambientTemperature +=1.0;
-     
+
   }
 
+    //Now we reset the variables of the visualization. 
 
+    //BodyTemperature reset
     if(bodyTemperature > 40.0)
     {
     bodyTemperature = 33.0;
     }
+
+    //Ambient Temperature reset
     if(ambientTemperature > 40.0)
     {
     ambientTemperature = 25.0;
     }
-    
-    timestamp = millis(); 
+
+    //FSR Status Reset
+    if (FSRStatus==2)
+     {
+         FSRStatus=0;
+     }
+
+     //Timestamp calculation in standalone mode
+    timestamp = millis();
     }
   else
   {
@@ -421,13 +441,12 @@ void draw() {
 
   }
 
-void stop() 
+void stop()
 {
    try {
       output.close();
     } catch (IOException e) {
       println("Error while closing the writer");
     }
-} 
+}
 // ===============================================================
-
