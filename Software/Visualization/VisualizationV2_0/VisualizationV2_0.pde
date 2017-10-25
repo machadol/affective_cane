@@ -63,7 +63,7 @@ void OpenFile()
     println("Output is in " + filePath);
     try
     {
-    output.write("timestamp;pitch;roll;yaw;FSRStatus\n\t");
+    output.write("timestamp;pitch;roll;yaw;FSRStatus;\n\t");
     }
     catch(IOException e) {    }
 }
@@ -269,7 +269,7 @@ void draw() {
         String[] pkg=inData.split ("\t");
          if (pkg!=null)
          {
-            if(pkg[0].equals("ypr"))
+            if(pkg[0].equals("ypr") && pkg.length == 4)
             {
                 // read package with yaw roll anda pitch
 
@@ -279,7 +279,7 @@ void draw() {
 
                 hasNewData = true;
             }
-            if(pkg[0].equals("quat"))
+            if(pkg[0].equals("quat") && pkg.length == 5)
              {
               //read package with quartenions
 
@@ -295,10 +295,10 @@ void draw() {
                 //
                 hasNewData = true;
              }
-            if(pkg[0].equals("fsr"))
+            if(pkg[0].equals("fsr") && pkg.length == 3)
              {
-               timestamp = Integer.parseInt(pkg[1]);
-               FSRStatus = Integer.parseInt(pkg[2]);
+               timestamp = Integer.parseInt(pkg[1].trim());
+               FSRStatus= Integer.parseInt(pkg[2].trim());
                 //read package with fsr
                 hasNewData = true;
              }
