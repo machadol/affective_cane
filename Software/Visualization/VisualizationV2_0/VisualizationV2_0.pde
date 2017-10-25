@@ -7,7 +7,7 @@ Changelog:
       - Added Writer();
       -Insert the colors with temperature
       -put the limeited of the ground
-
+      -make a method of the ground collors
 */
 import processing.serial.*;
 import shapes3d.utils.*;
@@ -30,8 +30,8 @@ int serialPortTries = 2; //Number of tries to open the serial port
 float[] quat = {1.0,0.0,0.0,0.0};
 boolean serialPortIsOpen = false;
 float bodyTemperature = 33.0;
-float ambientTemperature = 16.0;
-
+float ambientTemperature = 25.0;
+float AmbientTemp=0.0;
 int timeSince = 0;
 int firstTimer = 0;
 
@@ -72,63 +72,64 @@ void tempB(float temp){ // body temperature between 33 a 41
   color orange = color (255,140,0);
   color yellow =color(255,204,0);
   color red = color (255,0,0);
-  color darkRed = color (178,34,34);
-  color maroon = color (128,0,0);
-
-
+  //color darkRed = color (178,34,34);
+  //color maroon = color (128,0,0);
+  color slateBlue = color (106,90,205);
+  color Chocolate = color (210 ,164,96);
+  color SpringGreen = color (0,255,127);
     // parte de puxar os dados da porta serial
 
 
    if (33<temp && temp<=34)
     { fill(blue);
-      box( 100);
+//      box( 100);
 
     }
    else if(34<temp && temp <=35)
     { fill(green);
-      box( 100);
+    //  box( 100);
 
 
     }
    else if(35<temp && temp <=36)
     { fill(orange);
-      box( 100);
+      //box( 100);
 
 
     }
    else if(36<temp && temp <=37)
     { fill(yellow);
-      box( 100);
+      //box( 100);
 
 
     }
    else if(37<temp && temp <=38)
-      { fill(red);
-        box( 100);
+      { fill(SpringGreen);
+        //box( 100);
 
 
       }
    else if(38<temp && temp <=39)
       {
-        fill(darkRed);
-        box( 100);
+        fill(slateBlue);
+        //box( 100);
 
 
       } else if(38<temp && temp <=39)
       {
-        fill(maroon);
-        box( 100);
+        fill(Chocolate);
+        //box( 100);
 
       }
       else if (temp>=40)
       {
-          fill(0);
-          box( 100);
+          fill(red);
+          //box( 100);
       }
       else if (temp<=33)
       {
           fill(255);
-          box( 100);
+          //box( 100);
       }
 
     box( 100);
@@ -136,11 +137,68 @@ void tempB(float temp){ // body temperature between 33 a 41
 }
 
 
-void tempA(float temp){
-background(map(temp,0,50,0,255),2,0);
+void tempA(float ambientTemp){
+  
+    // color definitions
+    color plum = color (221,160,221);
+    color crimson = color (220,20,60);
+    color salmon = color (250,128,114);
+    //color yellow =color(255,204,0);
+    //color darkRed = color (178,34,34);
+    color skyBlue = color (135,206,235);
+    color red = color (255,0,0);
+    color lightSlateGray = color (119,136,153);
+  
+     // parte de puxar os dados da porta serial
+  
+    //arrange of 25 until 40
+    
+     if (24<ambientTemp && ambientTemp<=26.5)
+      { background(skyBlue);
+       
+      }
+     else  if (26.5<ambientTemp && ambientTemp<=29)
+      { background(plum);
+       
+  
+      }
+     else  if (29<ambientTemp && ambientTemp<=31.5)
+      { background(crimson);
+       
+  
+  
+          }
+        else  if (31.5<ambientTemp && ambientTemp<=34)
+      { background(salmon);
+       
+  
+  
+      }
+    else  if (34<ambientTemp && ambientTemp<=36.5)
+      { 
+        background(lightSlateGray);
+       
+      }
+        else  if (36.5<ambientTemp && ambientTemp<=40)
+      { 
+        background(skyBlue);
+  
+      }
+       else  if (40<ambientTemp && ambientTemp<=42.5)
+      { 
+        background(red);
+  
+      }
+      else if(ambientTemp>42.5)
+      {
+         background(0); 
+      }
+      else if(ambientTemp<=24)
+      {
+         background(255); 
+      }
+  }
 
-
-}
 
 
 
@@ -278,7 +336,7 @@ void draw() {
 
     timeSince = millis();
 
-    if(timeSince - firstTimer > 2000)
+    if(timeSince - firstTimer > 500)
   {
     firstTimer = millis();
      bodyTemperature+=1.0;
@@ -292,7 +350,7 @@ void draw() {
     }
     if(ambientTemperature > 40.0)
     {
-    ambientTemperature = 16.0;
+    ambientTemperature = 25.0;
     }
 
     }
