@@ -4,6 +4,11 @@
 #include "DHT.h"
 #include <QueueArray.h>
 
+/*OLED headers and Defines*/
+#include <U8glib.h>
+U8GLIB_SSD1306_128X32 u8g(U8G_I2C_OPT_NONE);  // I2C / TWI 
+int screen=1;
+
 /*IMU headers Defines*/
 #include <I2Cdev.h>
 #include <MPU6050_6Axis_MotionApps20.h>
@@ -67,19 +72,20 @@ bool CanRead[3];
 
 //select the data to be analysed.
 //M-HEALTH Module 
-//#define READ_OXIMETRY 
-//#define READ_HANDTEMP 
-//#define READ_GSR      
+#define READ_OXIMETRY //AD
+//#define READ_HANDTEMP  //AD
+#define READ_GSR      //AD
 
 //LOCATION MODULE
-//#define READ_DISTANCE_TO_FLOOR 
-#define READ_QUATERNIONS 
-//#define READ_GPS 
+#define READ_DISTANCE_TO_FLOOR // HCSR04 
+//#define READ_QUATERNIONS //MPU6050
+//#define READ_GPS //UBLOX
 
 //AMBIENTAL MODULE
-//#define READ_AMBTEMP 
+//#define READ_AMBTEMP  //DHT11
+//#define READ_RELUMID    //DHT11
 //#define READ_AMBLIGHT 
-//#define READ_RELUMID
+
 
 
 /*****/
@@ -90,14 +96,24 @@ void setup(){
 	Timer1.initialize(READER_LOWER_TIMER); // our interrupts will start each 1 ms (1000 samples/second)
 	Timer1.attachInterrupt(interruptManager);
   
-  if(initializeMPU()){Serial.println("MPUOK");}
+  if(initializeMPU()){}
 
   
   gpsSerial.begin(GPS_Serial_Baud);
-	
-	dht.begin();
 
-  Serial.println("StartOK");
+  #ifdef READ_AMBTEMP
+	dht.begin();
+  #endif
+  #ifdef READ_RELUMID
+  dht.begin();
+  #endif
+
+  u8g.firstPage();  
+  do {
+    welcomePage();
+  } while( u8g.nextPage() );
+
+  while(analogRead(FSR_PORT) > 100);
 }
 
 void loop()
@@ -128,10 +144,10 @@ void loop()
 		#ifdef READ_GSR
 			//TODO: GERAR UM VALOR NO PROTOCOLO PARA GSR
 			
-			data = analogRead(HANDTEMP_PORT)
+			data = analogRead(HANDTEMP_PORT);
 			
-			rxData.push(2)
-			rxData.push(data)
+			rxData.push(2);
+			rxData.push(data);
 			
 		#endif
 
@@ -232,12 +248,38 @@ void loop()
 
 
 	//Now print data.
-	while (!rxData.isEmpty ())
-    //Serial.println (rxData.dequeue());
-rxData.dequeue();
-	
-}
+	while (!rxData.isEmpty()){
+    Serial.print(rxData.dequeue());
+   }
 
+  
+  u8g.firstPage();  
+  do {
+    switch(screen)
+    {
+      case 1:
+      draw1();
+      break;
+      case 2:
+      draw2();
+      break;
+      case 3:
+      draw3();
+      break;
+      case 4:
+      draw4();
+      break;
+      default:
+      break;
+    }
+  } while( u8g.nextPage() );
+
+  screen++;
+
+  if(screen > 4)
+    screen = 1;
+}
+  
 void interruptManager()
 {
 	//This enable/disable readings in the manager.
@@ -349,7 +391,7 @@ void getAccData()
             
             mpu.dmpGetQuaternion(&q, fifoBuffer);
 
-            Serial.print("W: ");
+           /* Serial.print("W: ");
             Serial.println(q.w);
             
             Serial.print("X: ");
@@ -360,7 +402,7 @@ void getAccData()
             
             Serial.print("Z: ");
             Serial.println(q.z);
-        
+        */
         }
     }     
 
@@ -404,4 +446,35 @@ void getGPSPosition()
     
   } 
 
+}
+
+
+void welcomePage(void) {
+// graphic commands to redraw the complete screen should be placed here  
+  //u8g.setFont(u8g_font_unifont);
+  u8g.setFont(u8g_font_profont12);
+  u8g.drawStr( 20, 10, "Affective Cane!");
+
+  u8g.drawStr( 20, 23, "Press The Ground");
+  u8g.drawStr( 20, 30, "To Start...");
+}
+
+void draw1(void)
+{
+  u8g.drawCircle(64, 16, 16,U8G_DRAW_UPPER_RIGHT);  
+}
+
+void draw2(void)
+{
+  u8g.drawCircle(64, 16, 16,U8G_DRAW_LOWER_RIGHT);  
+}
+
+void draw3(void)
+{
+  u8g.drawCircle(64, 16, 16,U8G_DRAW_LOWER_LEFT);  
+}
+
+void draw4(void)
+{
+  u8g.drawCircle(64, 16, 16,U8G_DRAW_UPPER_LEFT);  
 }
