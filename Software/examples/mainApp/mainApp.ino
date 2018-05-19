@@ -26,8 +26,11 @@ Quaternion q;           // [w, x, y, z]         quaternion container
 
 /*GPS headers Defines*/
 #include <SoftwareSerial.h> 
-#include <TinyGPS.h> 
-SoftwareSerial gpsSerial(3,4);
+#include <TinyGPS.h>    
+#define GPS_RX  4
+#define GPS_TX  3
+#define GPS_Serial_Baud 9600
+SoftwareSerial gpsSerial(GPS_RX, GPS_TX);
 TinyGPS gps; 
 float lat,lon;
 /**/
@@ -69,9 +72,9 @@ bool CanRead[3];
 //#define READ_GSR      
 
 //LOCATION MODULE
-#define READ_DISTANCE_TO_FLOOR 
+//#define READ_DISTANCE_TO_FLOOR 
 //#define READ_QUATERNIONS 
-//#define READ_GPS 
+#define READ_GPS 
 
 //AMBIENTAL MODULE
 //#define READ_AMBTEMP 
@@ -87,6 +90,7 @@ void setup(){
 	Timer1.attachInterrupt(interruptManager);
 
   Serial.begin(115200);
+  gpsSerial.begin(GPS_Serial_Baud);
 	
 	dht.begin();
 
@@ -208,14 +212,14 @@ void loop()
 			floatData = lat;
 
 			//Preserves the last two decimal places of data
-			data = (int) floatData*10000;
+			data = (int) (floatData*100);
 
 			rxData.push(6);
 			rxData.push(data); //First is Lat
 
 			floatData = lon;
-			//Preserves the last two decimal places of data
-			data = (int) floatData*10000;
+			//Preserves the last t  wo decimal places of data
+			data = (int) (floatData*100);
 			rxData.push(data); //Last in lon
 
 		#endif
@@ -351,12 +355,35 @@ void dmpDataReady() {
 void getGPSPosition()
 {
 
-  while(gpsSerial.available())
-  { // check for gps data 
-    if(gps.encode(gpsSerial.read()))// encode gps data 
-    {  
-        gps.f_get_position(&lat,&lon); // get latitude and longitude 
-      }
+  bool newData = false;
+
+  for (unsigned long start = millis(); millis() - start < 1000;)
+  {
+    while(gpsSerial.available())
+    { // check for gps data 
+
+      char c = gpsSerial.read();
+    //   Serial.write(c); //apague o comentario para mostrar os dados crus
+      if (gps.encode(c)) // Atribui true para newData caso novos dados sejam recebidos
+        newData = true;
+    }
+  }
+  
+  if (newData)
+  {
+  
+    Serial.println("Waiting GPS");
+    gps.f_get_position(&lat,&lon); // get latitude and longitude 
+
+    if(lat == TinyGPS::GPS_INVALID_F_ANGLE )
+    {
+      lat = 0; 
+    }
+    if(lon == TinyGPS::GPS_INVALID_F_ANGLE)
+    {
+      lon = 0;  
+    }
+    
   } 
 
 }
