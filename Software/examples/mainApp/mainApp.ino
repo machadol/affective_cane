@@ -73,8 +73,8 @@ bool CanRead[3];
 
 //LOCATION MODULE
 //#define READ_DISTANCE_TO_FLOOR 
-//#define READ_QUATERNIONS 
-#define READ_GPS 
+#define READ_QUATERNIONS 
+//#define READ_GPS 
 
 //AMBIENTAL MODULE
 //#define READ_AMBTEMP 
@@ -85,11 +85,14 @@ bool CanRead[3];
 /*****/
 void setup(){	
 
+  Serial.begin(115200);
 	// Setup the first timers
 	Timer1.initialize(READER_LOWER_TIMER); // our interrupts will start each 1 ms (1000 samples/second)
 	Timer1.attachInterrupt(interruptManager);
+  
+  if(initializeMPU()){Serial.println("MPUOK");}
 
-  Serial.begin(115200);
+  
   gpsSerial.begin(GPS_Serial_Baud);
 	
 	dht.begin();
@@ -230,8 +233,8 @@ void loop()
 
 	//Now print data.
 	while (!rxData.isEmpty ())
-    Serial.println (rxData.dequeue());
-
+    //Serial.println (rxData.dequeue());
+rxData.dequeue();
 	
 }
 
@@ -265,7 +268,7 @@ void interruptManager()
 	}
 }
 
-int initialize()
+int initializeMPU()
 {
   Wire.begin();
   mpu.initialize();
@@ -298,10 +301,12 @@ int initialize()
         // get expected DMP packet size for later comparison
         packetSize = mpu.dmpGetFIFOPacketSize();
 
+        return 1;
+
     }
     else
     {
-      return -1;
+      return 0;
     }
 
 }
@@ -315,11 +320,11 @@ void getAccData()
 
     // get current FIFO count
     fifoCount = mpu.getFIFOCount();
-
-
     // wait for MPU interrupt or extra packet(s) available
-    if(mpuInterrupt && fifoCount >= packetSize)
+    //if(mpuInterrupt && fifoCount >= packetSize)
+    if(fifoCount >= packetSize)
     {
+
         // reset interrupt flag and get INT_STATUS byte
         mpuInterrupt = false;
         mpuIntStatus = mpu.getIntStatus();
@@ -335,6 +340,7 @@ void getAccData()
 
         else if (mpuIntStatus & 0x02) 
         {
+
             // wait for correct available data length, should be a VERY short wait
             while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
 
@@ -342,6 +348,18 @@ void getAccData()
             mpu.getFIFOBytes(fifoBuffer, packetSize);
             
             mpu.dmpGetQuaternion(&q, fifoBuffer);
+
+            Serial.print("W: ");
+            Serial.println(q.w);
+            
+            Serial.print("X: ");
+            Serial.println(q.x);
+            
+            Serial.print("Y: ");
+            Serial.println(q.y);
+            
+            Serial.print("Z: ");
+            Serial.println(q.z);
         
         }
     }     
