@@ -2,13 +2,16 @@
 #include <math.h>
 #include <stdlib.h>
 #include <queue>
-#include <ctime>
+#include <time.h>
 using namespace std;
 int resultado;
 int bit_descritor = 0;
 int entradaCopia;
 int count = 1;
 unsigned int entrada;
+float tempo;
+float ml_segundos=0;
+time_t t_inicio, t_final;
 
 
 void aplicar_protocolo(int bit_descritor,int resultado_magnitude){
@@ -63,6 +66,7 @@ void aplicar_protocolo(int bit_descritor,int resultado_magnitude){
 void leitura(){
     int magnitude=0;
     int resultado_magnitude=0;
+    t_inicio = time(NULL);
     cin >> entrada;
     entradaCopia = entrada;
     do
@@ -87,6 +91,11 @@ void leitura(){
     //cout << resultado_magnitude << endl;
     
      aplicar_protocolo(bit_descritor,resultado_magnitude);
+    t_final=time(NULL);
+    tempo = difftime(t_final,t_inicio);
+    ml_segundos=tempo/1000;    
+    cout<<"tempo em milissegundos:"<<ml_segundos<<endl;
+
 }
 
 int main()
