@@ -67,46 +67,42 @@ void aplicar_protocolo(int bit_descritor,int resultado_magnitude){
 
 void leitura(){
     int *p;
-    int N, numero;
+    int N=0, numero=0;
     int magnitude=0;
     int resultado_magnitude=0;
     t_inicio = time(NULL);
+    do{ 
+        cin>>entrada;
+        
+        // cout<<entrada<<endl;
+        entradaCopia = entrada;
+        do{
+            entrada = entrada / 10;
+            count++;
+        } while (entrada / 10 != 0);
 
-       // cout<<entrada<<endl;
-    entradaCopia = entrada;
-    do
-    {
-        entrada = entrada / 10;
-        count++;
-    } while (entrada / 10 != 0);
-
-    N = count;
-    p = (int *)malloc(N * sizeof(double));
-    *p = entradaCopia;
-    // pega o primeiro bit de cada entrada
-    bit_descritor = *p / pow(10, N - 1);
-    //calcula a magnitude
-    resultado_magnitude =*p - bit_descritor*pow(10,N-1);
-    aplicar_protocolo(bit_descritor,resultado_magnitude);
-    t_final=time(NULL);
-    tempo = difftime(t_final,t_inicio);
-    ml_segundos=tempo/1000;    
-    cout<<"tempo em segundos:"<<tempo<<endl;
-    //cout<<*p<<endl;
-    free(p);
-    p==NULL;
-    // cout<<*p<<endl;    
-   
-    
-
-     aplicar_protocolo(bit_descritor,resultado_magnitude);
-    t_final=time(NULL);
-    tempo = difftime(t_final,t_inicio);
-    ml_segundos=tempo/1000;    
-    cout<<"tempo em milissegundos:"<<ml_segundos<<endl;
-
+        N = count;
+        
+        p = (int *)malloc(N * sizeof(double));
+        *p = entradaCopia;
+        // pega o primeiro bit de cada entrada
+        bit_descritor = *p / pow(10, N - 1);
+        //calcula a magnitude
+        resultado_magnitude =*p - bit_descritor*pow(10,N-1);
+        aplicar_protocolo(bit_descritor,resultado_magnitude);
+        t_final=time(NULL);
+        tempo = difftime(t_final,t_inicio);
+            
+        cout<<tempo<<" segundos:"<<endl;
+        //cout<<*p<<endl;
+        free(p);
+        p==NULL;
+        cout<<count<<endl;
+        //corrigir o erro de incremento do count
+        count=1;
+          
+    }while(entrada!=0);
 }
-
 int main(){
 
     leitura();
