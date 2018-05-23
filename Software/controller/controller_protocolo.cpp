@@ -71,8 +71,7 @@ void leitura(){
     int magnitude=0;
     int resultado_magnitude=0;
     t_inicio = time(NULL);
-   
-    cin >> entrada;
+
        // cout<<entrada<<endl;
     entradaCopia = entrada;
     do
@@ -99,6 +98,13 @@ void leitura(){
     // cout<<*p<<endl;    
    
     
+
+     aplicar_protocolo(bit_descritor,resultado_magnitude);
+    t_final=time(NULL);
+    tempo = difftime(t_final,t_inicio);
+    ml_segundos=tempo/1000;    
+    cout<<"tempo em milissegundos:"<<ml_segundos<<endl;
+
 }
 
 int main(){
