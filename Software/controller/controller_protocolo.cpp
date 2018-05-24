@@ -1,8 +1,11 @@
 #include <iostream>
 #include <math.h>
+#include<stdio.h>
 #include <stdlib.h>
 #include <queue>
 #include <time.h>
+#include <sys/timeb.h>
+
 using namespace std;
 int resultado;
 int bit_descritor = 0;
@@ -11,12 +14,12 @@ int count = 1;
 unsigned int entrada;
 float tempo;
 float ml_segundos=0;
-time_t t_inicio, t_final;
+time_t tInicio, tFim; 
 
 
 void aplicar_protocolo(int bit_descritor,int resultado_magnitude){
-    switch (bit_descritor){
     
+    switch (bit_descritor){
     case 0:
         cout << "Fim do programa :"<< endl;
         break;
@@ -64,14 +67,30 @@ void aplicar_protocolo(int bit_descritor,int resultado_magnitude){
         cout << "Entrada inválida:" << endl;
     }
 }
+int getMilliCount(){
+	timeb tb;
+	ftime(&tb);
+	int nCount = tb.millitm + (tb.time & 0xfffff) * 1000;
+	return nCount;
+}
+
+int getMilliSpan(int nTimeStart){
+	int nSpan = getMilliCount() - nTimeStart;
+	if(nSpan < 0)
+		nSpan += 0x100000 * 1000;
+	return nSpan;
+}
 
 void leitura(){
+    double Segundos, Milissegundos, Microssegundos;
     int *p;
     int N=0, numero=0;
     int magnitude=0;
     int resultado_magnitude=0;
-    t_inicio = time(NULL);
+   // tInicio = clock();
+    int start = getMilliCount();
     do{ 
+        
         cin>>entrada;
         
         // cout<<entrada<<endl;
@@ -90,16 +109,17 @@ void leitura(){
         //calcula a magnitude
         resultado_magnitude =*p - bit_descritor*pow(10,N-1);
         aplicar_protocolo(bit_descritor,resultado_magnitude);
-        t_final=time(NULL);
-        tempo = difftime(t_final,t_inicio);
-            
-        cout<<tempo<<" segundos:"<<endl;
-        //cout<<*p<<endl;
+        //tFim=clock();
+        int milliSecondsElapsed = getMilliSpan(start);
+        //tempo =   difftime(tFim,tInicio)/100;
+        printf("%u milliseconds\n", milliSecondsElapsed);
+
         free(p);
         p==NULL;
-        cout<<count<<endl;
+       
         //corrigir o erro de incremento do count
         count=1;
+       
           
     }while(entrada!=0);
 }
@@ -109,3 +129,7 @@ int main(){
 
 return 0;
 }
+
+// ler porta serial
+// plotar valores
+// salvar dados em BD ou arquivo 
