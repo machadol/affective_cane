@@ -24,7 +24,14 @@ char caracteres;
 int contador=0;
 int n_bits;
 int longitude=0;
-char batimento[]= "batimento_cardiaco.txt";
+char batimento[]= "Batimento_cardiaco.txt";
+char temperatura_mao[] ="Temperatura_mao.txt";
+char GSR[] ="GSR.txt";
+char temperatura_ambiente[]="Temperatura_ambiente.txt";
+char umidade_ambiete[]="Umidade_ambiente.txt";
+char GPS[]="GPS.txt";
+char luminosidade[]="Luminosidade.txt";
+char Rotation[]="Rotation.txt";
 
 void open_serial_port(){
     int fd;
@@ -43,17 +50,32 @@ void open_serial_port(){
 
 
 
-void salvar_dados(float first_input,unsigned int milliseconds,char arquivo[]){
+void save_data_one_input(float first_input,unsigned int milliseconds,char arquivo[]){
     FILE *file;
     file=fopen(arquivo,"a");
     //fseek(file,)
     if (file==NULL){
         cout<<"arquivo não exite"<<endl;
     }else{
-    fprintf(file,"%.4f %u\n",first_input,milliseconds);
+    fprintf(file,"%u %.2f\n",milliseconds,first_input);
     fclose(file);
     }
 }
+void save_data_two_inputs(float first_input,float second_input,unsigned int milliseconds,char arquivo[]){
+    FILE *file;
+    file=fopen(arquivo,"a");
+    //fseek(file,)
+    if (file==NULL){
+        cout<<"arquivo não exite"<<endl;
+    }else{
+    fprintf(file,"%u %.2f %.2f\n",milliseconds,first_input,second_input);
+    fclose(file);
+    }
+}
+
+
+
+
 void aplicar_protocolo(int entrada,unsigned int milliseconds){
      float first_input=0.0;
      float second_input=0;
@@ -67,46 +89,54 @@ void aplicar_protocolo(int entrada,unsigned int milliseconds){
         cin>>first_input;
         cout << "Batimentos Cardiacos é igual a :"<<first_input<< endl;
         printf("%u milliseconds\n", milliseconds);
-        salvar_dados(first_input,milliseconds,batimento);
+        save_data_one_input(first_input,milliseconds,batimento);
       
         break;
 
-    case 2:
+    case 2: 
         cin>>first_input;
         cout << "Dados de temperatura da mão é igual a :"<<first_input << endl;
         printf("%u milliseconds\n", milliseconds);
+        save_data_one_input(first_input,milliseconds,temperatura_mao);
         break;
 
     case 3://recebe numero negativo
         cin>>first_input;
         cout << "GSR" <<first_input<< endl;
         printf("%u milliseconds\n", milliseconds);
+        save_data_one_input(first_input,milliseconds,GSR);
         break;
 
     case 4:
         cin>>first_input;
         cout << "temperatura ambiente é igual a :"<<first_input << endl;
         printf("%u milliseconds\n", milliseconds);
+        save_data_one_input(first_input,milliseconds,temperatura_ambiente);
         break;
 
     case 5:
         cin>>first_input;
         cout << "Umidade ambiente é igual a :"<<first_input << endl;
         printf("%u milliseconds\n", milliseconds);
+        save_data_one_input(first_input,milliseconds,umidade_ambiete);
         break;
 
     case 6://2 dados latitude pegar o valor latitude e e longitude dividir/100
     //recebe numero negativo
         cin>>first_input;
         cin >> second_input;
-        cout << "latitude é igual a :" <<first_input/100<< endl;
-        cout << "longitude é igual a :" <<second_input/100<< endl;
+        first_input=first_input/100;
+        second_input=second_input/100;
+        cout << "latitude é igual a :" <<first_input<< endl;
+        cout << "longitude é igual a :" <<second_input<< endl;
         printf("%u milliseconds\n", milliseconds);
+        save_data_two_inputs(first_input,second_input,milliseconds,GPS);
         break;
 
     case 7:
         cout << "Luminosidade é igual a :" <<first_input<< endl;
         printf("%u milliseconds\n", milliseconds);
+        save_data_one_input(first_input,milliseconds,luminosidade);
         break;
 
     case 8:
@@ -116,11 +146,6 @@ void aplicar_protocolo(int entrada,unsigned int milliseconds){
 
     case 9://recebe 4 entradas decimais e dividir por 100 
         cout << "Rotação é igual a :" <<first_input<< endl;
-        printf("%u milliseconds\n", milliseconds);
-        break;
-
-    case 10:
-        cout << "Batime é igual a :"<<first_input << endl;
         printf("%u milliseconds\n", milliseconds);
         break;
 
