@@ -24,6 +24,7 @@ char caracteres;
 int contador=0;
 int n_bits;
 int longitude=0;
+char batimento[]= "batimento_cardiaco.txt";
 
 void open_serial_port(){
     int fd;
@@ -42,86 +43,84 @@ void open_serial_port(){
 
 
 
-void salvar_dados(int resultado_magnitude,unsigned int milliseconds){
+void salvar_dados(float first_input,unsigned int milliseconds,char arquivo[]){
     FILE *file;
-    file=fopen("batimento_cardiaco.txt","a");
+    file=fopen(arquivo,"a");
     //fseek(file,)
-
-    fprintf(file,"%d %u\n",resultado_magnitude,milliseconds);
+    if (file==NULL){
+        cout<<"arquivo não exite"<<endl;
+    }else{
+    fprintf(file,"%.4f %u\n",first_input,milliseconds);
     fclose(file);
-
-}
-int ler_arquivo(){
-    FILE *file;
-    file=fopen("batimento_cardiaco.txt","r");
-   
-    while((caracteres=fgetc(file))!=EOF){
-        contador++;
     }
-    return contador;
 }
-
-void aplicar_protocolo(int bit_descritor,int resultado_magnitude,unsigned int milliseconds){
-    
-    switch (bit_descritor){
+void aplicar_protocolo(int entrada,unsigned int milliseconds){
+     float first_input=0.0;
+     float second_input=0;
+    switch (entrada){
     case 0:
         cout << "\t\t Fim do programa\t\t :"<< endl;
         
         break;
     case 1:
-        cout << "Batimentos Cardiacos é igual a :"<<resultado_magnitude<< endl;
+        //char arquivo[] = "batimento_cardiaco.txt";
+        cin>>first_input;
+        cout << "Batimentos Cardiacos é igual a :"<<first_input<< endl;
         printf("%u milliseconds\n", milliseconds);
-        n_bits=ler_arquivo();
-        salvar_dados(resultado_magnitude,milliseconds);
-        cout<<n_bits<<endl;
+        salvar_dados(first_input,milliseconds,batimento);
+      
         break;
 
     case 2:
-        cout << "Dados de temperatura da mão é igual a :"<<resultado_magnitude << endl;
+        cin>>first_input;
+        cout << "Dados de temperatura da mão é igual a :"<<first_input << endl;
         printf("%u milliseconds\n", milliseconds);
         break;
 
     case 3://recebe numero negativo
-        cout << "GSR" <<resultado_magnitude<< endl;
+        cin>>first_input;
+        cout << "GSR" <<first_input<< endl;
         printf("%u milliseconds\n", milliseconds);
         break;
 
     case 4:
-        cout << "temperatura ambiente é igual a :"<<resultado_magnitude << endl;
+        cin>>first_input;
+        cout << "temperatura ambiente é igual a :"<<first_input << endl;
         printf("%u milliseconds\n", milliseconds);
         break;
 
     case 5:
-        cout << "Umidade ambiente é igual a :"<<resultado_magnitude << endl;
+        cin>>first_input;
+        cout << "Umidade ambiente é igual a :"<<first_input << endl;
         printf("%u milliseconds\n", milliseconds);
         break;
 
     case 6://2 dados latitude pegar o valor latitude e e longitude dividir/100
     //recebe numero negativo
-        
-        cin >> longitude;
-        cout << "latitude é igual a :" <<resultado_magnitude/100<< endl;
-        cout << "longitude é igual a :" <<longitude/100<< endl;
+        cin>>first_input;
+        cin >> second_input;
+        cout << "latitude é igual a :" <<first_input/100<< endl;
+        cout << "longitude é igual a :" <<second_input/100<< endl;
         printf("%u milliseconds\n", milliseconds);
         break;
 
     case 7:
-        cout << "Luminosidade é igual a :" <<resultado_magnitude<< endl;
+        cout << "Luminosidade é igual a :" <<first_input<< endl;
         printf("%u milliseconds\n", milliseconds);
         break;
 
     case 8:
-        //cout << "FSR é igual a :" <<resultado_magnitude<< endl;
+        //cout << "FSR é igual a :" <<first_input<< endl;
        // printf("%u milliseconds\n", milliseconds);
        // break;
 
     case 9://recebe 4 entradas decimais e dividir por 100 
-        cout << "Rotação é igual a :" <<resultado_magnitude<< endl;
+        cout << "Rotação é igual a :" <<first_input<< endl;
         printf("%u milliseconds\n", milliseconds);
         break;
 
     case 10:
-        cout << "Batime é igual a :"<<resultado_magnitude << endl;
+        cout << "Batime é igual a :"<<first_input << endl;
         printf("%u milliseconds\n", milliseconds);
         break;
 
@@ -144,53 +143,27 @@ int getMilliSpan(int nTimeStart){
 }
 
 void leitura(){
-    double Segundos, Milissegundos, Microssegundos;
-    int *p;
+   
     int N=0, numero=0;
     int magnitude=0;
-    int resultado_magnitude=0;
-   // tInicio = clock();
+   
     int start = getMilliCount();
     do{ 
         
         cin>>entrada;
         
-        // cout<<entrada<<endl;
-        entradaCopia = entrada;
-        do{
-            entrada = entrada / 10;
-            count++;
-        } while (entrada / 10 != 0);
-
-        N = count;
-        
-        p = (int *)malloc(N * sizeof(double));
-        *p = entradaCopia;
-        // pega o primeiro bit de cada entrada
-        bit_descritor = *p / pow(10, N - 1);
-        //calcula a magnitude
-        resultado_magnitude =*p - bit_descritor*pow(10,N-1);
-        
-        //tFim=clock();
         int milliSeconds = getMilliSpan(start);
-        //tempo =   difftime(tFim,tInicio)/100;
-        aplicar_protocolo(bit_descritor,resultado_magnitude,milliSeconds);
-        
+      
+        aplicar_protocolo(entrada,milliSeconds);
 
-        free(p);
-        p==NULL;
-       
-        //corrigir o erro de incremento do count
-        count=1;
-       
           
-    }while(bit_descritor!=0);
+    }while(entrada!=0);
     
 }
 int main(){
 
-    //leitura();
-    open_serial_port();
+    leitura();
+    //open_serial_port();
 return 0;
 }
 
