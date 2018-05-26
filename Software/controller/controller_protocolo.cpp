@@ -73,12 +73,26 @@ void save_data_two_inputs(float first_input,float second_input,unsigned int mill
     }
 }
 
+void save_data_four_inputs(float first_input,float second_input,float third_input,float forth_input,unsigned int milliseconds,char arquivo[]){
+    FILE *file;
+    file=fopen(arquivo,"a");
+    
+    if (file==NULL){
+        cout<<"arquivo não exite"<<endl;
+    }else{
+    fprintf(file,"%u %.2f %.2f %.2f %.2f\n",milliseconds,first_input,second_input,third_input,forth_input);
+    fclose(file);
+    }
+}
+
 
 
 
 void aplicar_protocolo(int entrada,unsigned int milliseconds){
-     float first_input=0.0;
+     float first_input=0;
      float second_input=0;
+     float third_input =0;
+     float forth_input =0;
     switch (entrada){
     case 0:
         cout << "\t\t Fim do programa\t\t :"<< endl;
@@ -145,8 +159,20 @@ void aplicar_protocolo(int entrada,unsigned int milliseconds){
        // break;
 
     case 9://recebe 4 entradas decimais e dividir por 100 
-        cout << "Rotação é igual a :" <<first_input<< endl;
+        cin>>first_input;
+        cin>>second_input;
+        cin>>third_input;
+        cin>>forth_input;
+        first_input=first_input/100;
+        second_input=second_input/100;
+        third_input=third_input/100;
+        forth_input=forth_input/100;
+        cout << "Quartenio 1:" <<first_input<<endl;
+        cout << "Quartenio 2:" <<second_input<<endl;
+        cout << "Quartenio 3:" <<third_input<<endl;
+        cout << "Quartenio 4:" <<forth_input<<endl;
         printf("%u milliseconds\n", milliseconds);
+        save_data_four_inputs(first_input,second_input,third_input,forth_input,milliseconds,Rotation);
         break;
 
     default:
