@@ -72,20 +72,23 @@ bool CanRead[3];
 
 //select the data to be analysed.
 //M-HEALTH Module 
-#define READ_OXIMETRY //AD
-//#define READ_HANDTEMP  //AD
-#define READ_GSR      //AD
+#define READ_OXIMETRY //AD  1
+#define READ_HANDTEMP  //AD 2 
+#define READ_GSR      //AD 3
 
 //LOCATION MODULE
 #define READ_DISTANCE_TO_FLOOR // HCSR04 
-//#define READ_QUATERNIONS //MPU6050
-//#define READ_GPS //UBLOX
+#define READ_QUATERNIONS //MPU6050
+#define READ_GPS //UBLOX 6
 
 //AMBIENTAL MODULE
-//#define READ_AMBTEMP  //DHT11
-//#define READ_RELUMID    //DHT11
-//#define READ_AMBLIGHT 
+#define READ_AMBTEMP  //DHT11 4
+#define READ_RELUMID    //DHT11 5
+#define READ_AMBLIGHT  // 7
 
+//Protocolo:
+// COisas que tem 2 dados: manda ID \n dado1 \n Dado2\n dado3\n dado4\n
+// Coisas que tem 1 dado : Manda ID \n dado1 \n
 
 
 /*****/
@@ -146,7 +149,7 @@ void loop()
 			
 			data = analogRead(HANDTEMP_PORT);
 			
-			rxData.push(2);
+			rxData.push(3);
 			rxData.push(data);
 			
 		#endif
@@ -391,6 +394,7 @@ void getAccData()
             
             mpu.dmpGetQuaternion(&q, fifoBuffer);
 
+            //Envia multiplicado por 100
            /* Serial.print("W: ");
             Serial.println(q.w);
             
