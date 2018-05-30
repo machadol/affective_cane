@@ -32,7 +32,9 @@ Quaternion q;           // [w, x, y, z]         quaternion container
 /*GPS headers Defines*/
 #include <SoftwareSerial.h> 
 #include <TinyGPS.h>    
-#define GPS_RX  4
+//#define GPS_RX  4
+//#define GPS_TX  3
+#define GPS_RX  2
 #define GPS_TX  3
 #define GPS_Serial_Baud 9600
 SoftwareSerial gpsSerial(GPS_RX, GPS_TX);
@@ -69,7 +71,6 @@ bool CanRead[3];
 #define MIDDLE_TIMER 1
 #define HIGHER_TIMER 2
 
-
 //select the data to be analysed.
 //M-HEALTH Module 
 #define READ_OXIMETRY //AD  1
@@ -89,6 +90,7 @@ bool CanRead[3];
 //Protocolo:
 // COisas que tem 2 dados: manda ID \n dado1 \n Dado2\n dado3\n dado4\n
 // Coisas que tem 1 dado : Manda ID \n dado1 \n
+
 
 
 /*****/
