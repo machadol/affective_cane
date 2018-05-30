@@ -10,7 +10,7 @@ U8GLIB_SSD1306_128X32 u8g(U8G_I2C_OPT_NONE);  // I2C / TWI
 int screen=1;
 
 /*IMU headers Defines*/
-#include <I2Cdev.h>
+#include <I2Cdev.h> 
 #include <MPU6050_6Axis_MotionApps20.h>
 #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
     #include "Wire.h" 
@@ -74,18 +74,18 @@ bool CanRead[3];
 //select the data to be analysed.
 //M-HEALTH Module 
 #define READ_OXIMETRY //AD  1
-#define READ_HANDTEMP  //AD 2 
+//#define READ_HANDTEMP  //AD 2 
 #define READ_GSR      //AD 3
 
 //LOCATION MODULE
-#define READ_DISTANCE_TO_FLOOR // HCSR04 
-#define READ_QUATERNIONS //MPU6050
-#define READ_GPS //UBLOX 6
-
-//AMBIENTAL MODULE
-#define READ_AMBTEMP  //DHT11 4
-#define READ_RELUMID    //DHT11 5
-#define READ_AMBLIGHT  // 7
+//#define READ_DISTANCE_TO_FLOOR // HCSR04 
+//#define READ_QUATERNIONS //MPU6050
+//#define READ_GPS //UBLOX 6
+//
+////AMBIENTAL MODULE
+//#define READ_AMBTEMP  //DHT11 4
+//#define READ_RELUMID    //DHT11 5
+//#define READ_AMBLIGHT  // 7
 
 //Protocolo:
 // COisas que tem 2 dados: manda ID \n dado1 \n Dado2\n dado3\n dado4\n
@@ -103,9 +103,10 @@ void setup(){
   
   if(initializeMPU()){}
 
-  
+//  Serial.println("MPU_OK");
   gpsSerial.begin(GPS_Serial_Baud);
 
+//  Serial.println("GPS OK");
   #ifdef READ_AMBTEMP
 	dht.begin();
   #endif
@@ -113,18 +114,22 @@ void setup(){
   dht.begin();
   #endif
 
+//  Serial.println("DHT OK");
   u8g.firstPage();  
   do {
     welcomePage();
   } while( u8g.nextPage() );
 
-  while(analogRead(FSR_PORT) > 100);
+//  Serial.println("Tela OK");
+  while(analogRead(FSR_PORT) > 600);
+//    Serial.println(analogRead(FSR_PORT));
 }
 
 void loop()
 {
 
 	int data;
+  int pck ;
 	float floatData;
 
 	if(CanRead[LOWER_TIMER])
@@ -254,7 +259,15 @@ void loop()
 
 	//Now print data.
 	while (!rxData.isEmpty()){
-    Serial.print(rxData.dequeue());
+      
+      pck = (rxData.dequeue());
+
+      Serial.println();
+      Serial.println(pck);
+      
+        if(pck == 1 || pck == 2 || pck == 3)
+          
+          Serial.println(rxData.dequeue());
    }
 
   
