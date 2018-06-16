@@ -170,6 +170,18 @@ void loop()
 
 		#endif
 
+    #ifdef READ_BUTTON
+      data = analogRead(BUTTON_PORT);
+      rxData.push(11);
+      if(data!=0){
+        data=1; //the button isn't pressed
+        counter_inactivecane++; // +10 ms
+      }
+      else  counter_inactivecane=0;
+      rxData.push(data);
+
+    #endif
+
 		CanRead[LOWER_TIMER] = false;
 	}
 
@@ -242,6 +254,10 @@ void loop()
 			rxData.push(data); //Last in lon
 
 		#endif
+
+    if(counter_inactivecane >= 1500){
+      //power down the cane
+    }
 
 		CanRead[HIGHER_TIMER] = false;
 	}
