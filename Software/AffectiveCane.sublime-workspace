@@ -1,0 +1,1010 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"float",
+				"floatData"
+			],
+			[
+				"FLOAT",
+				"floatData"
+			],
+			[
+				"READ_",
+				"READ_QUATERNIONS"
+			],
+			[
+				"READER_",
+				"READER_MIDDLE_TIMER"
+			],
+			[
+				"gap",
+				"gapBtwPulses\tstatement"
+			],
+			[
+				"pck",
+				"PckToSave"
+			],
+			[
+				"file",
+				"fileDescriptor\tstatement"
+			],
+			[
+				"set_",
+				"set_ylim"
+			],
+			[
+				"first",
+				"firstTimestamp\tstatement"
+			],
+			[
+				"IR",
+				"IR_mean\tstatement"
+			],
+			[
+				"s",
+				"sleep\tfunction"
+			],
+			[
+				"y",
+				"ydata\tstatement"
+			],
+			[
+				"put",
+				"put\tfunction"
+			],
+			[
+				"flush",
+				"flushOutput\tfunction"
+			],
+			[
+				"Lock",
+				"LockSerialPort\tstatement"
+			],
+			[
+				"serial",
+				"SerialDesc\tstatement"
+			],
+			[
+				"AFE",
+				"AFE4490_List\tclass"
+			],
+			[
+				"last",
+				"last_node\tstatement"
+			],
+			[
+				"curren",
+				"current_node"
+			],
+			[
+				"next",
+				"nextnode\tfunction"
+			],
+			[
+				"tree_d",
+				"tree_DB"
+			],
+			[
+				"type",
+				"typeId"
+			],
+			[
+				"ty",
+				"typeId\tstatement"
+			],
+			[
+				"question",
+				"question_list\tstatement"
+			],
+			[
+				"current",
+				"current_node\tstatement"
+			],
+			[
+				"node",
+				"BinaryNode"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"contents": "#include <LiquidCrystal.h> \n#include <SoftwareSerial.h> \n#include <TinyGPS.h> \n\nfloat lat,lon;\n\nSoftwareSerial gpsSerial(3,4);\nTinyGPS gps; \n\nvoid getGPSPosition();",
+			"file": "examples/main App/GPS.h",
+			"file_size": 141,
+			"file_write_time": 131708609917214021,
+			"settings":
+			{
+				"buffer_size": 164,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "examples/IMULibExample/DHT.cpp",
+			"settings":
+			{
+				"buffer_size": 4012,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/inazawalabs/Downloads/get-pip.py",
+			"settings":
+			{
+				"buffer_size": 1642328,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/inazawalabs/Documents/VersionedProjects/affective_cane/Software/libs/i2cdevlib/Arduino/MPU6050/MPU6050.h",
+			"settings":
+			{
+				"buffer_size": 44338,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/inazawalabs/Documents/VersionedProjects/affective_cane/Software/examples/mainApp/Visualization.py",
+			"settings":
+			{
+				"buffer_size": 320,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/inazawalabs/Documents/VersionedProjects/affective_cane/Software/libs/i2cdevlib/Arduino/MPU6050/MPU6050_6Axis_MotionApps20.h",
+			"settings":
+			{
+				"buffer_size": 41760,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "Lista de Periféricos: \n\n\tPlataforma:\n\t\tArduino UNO\n\n\tTransmissão:\n\t\t[OK] Bluetooth [HC05]\n\n\tInterface HC\n\t\t[OK] OLED\t\n\n\n\tMódulo Ambiental \n\t\t[OK] Umidade relativa e Temperatura [DHT11]\n\t\t[OK] Luminosidade [LDR]\n\n\tMódulo M-Health\n\t\t[OK] Temp Mão [Termistor]\n\n\t\t\tInterface : 1 pino analógico qualquer\n\n\t\t[OK] Oximetria [PulseSensor]\n  \n\t\t\tInterface : 1 pino analógico qualquer\n\t\t\t\tA - Pino A\n\n\t\t[Pode Ser Posto no local do de TempMão.] Resistencia Galvanica. [GSR V1.2]\n\n\t\t\thttp://wiki.seeedstudio.com/Grove-GSR_Sensor/\n\t\t\t\n\t\t\tInterface: \n\t\t\t\tGND\tBlack\n\t\t\t\t5V\tRed\n\t\t\t\tNC\tWhite\n\t\t\t\tA0\tYellow\n\n\tMódulo Locacional\n\n\t\t~[OK] GPS [TinyGPS uBlox]\n\t\t\tAlimentação: 5V\n\t\t\tInterface: 2 pinos digitais quaisquer \n\t\t\t\t\t\tTX - Pino D3\n\t\t\t\t\t\tRX - Pino D4\n\t\t\tDependencias:\n\t\t\t\t\tSoftwareSerial\n\t\t\t\t\tTinyGPS\n\n\t\t\tCódigo Referencia:\n\t\t\t\thttps://create.arduino.cc/projecthub/ruchir1674/how-to-interface-gps-module-neo-6m-with-arduino-8f90ad\n\t\t\n\n\t\t~ [OK] Distancia Beng. Chão [HRCSR04]\n\t\t\n\t\t~ [OK] Quartênios (X,Y,Z) [MPU4050]\n\n\t\t[OK] Detector de pisada.\n\n\n",
+			"settings":
+			{
+				"buffer_size": 1032,
+				"line_ending": "Unix",
+				"name": "Lista de Periféricos:"
+			}
+		},
+		{
+			"file": "examples/IMULibExample/IMULibExample.ino",
+			"settings":
+			{
+				"buffer_size": 17530,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "examples/mainApp/DHT.cpp",
+			"settings":
+			{
+				"buffer_size": 4012,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "examples/mainApp/mainApp.ino",
+			"settings":
+			{
+				"buffer_size": 9670,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "#include <LiquidCrystal.h> \n#include <SoftwareSerial.h> \n#include <TinyGPS.h> \n\nfloat lat,lon;\n\nSoftwareSerial gpsSerial(3,4);\nTinyGPS gps; \n\nvoid getGPSPosition();\n",
+			"file": "examples/mainApp/GPS.h",
+			"file_size": 165,
+			"file_write_time": 131711329216635198,
+			"settings":
+			{
+				"buffer_size": 165,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "#include \"GPS.h\"\n\nvoid getGPSPosition()\n{\n\n\twhile(gpsSerial.available())\n\t{ // check for gps data \n\t\tif(gps.encode(gpsSerial.read()))// encode gps data \n \t\t{  \n  \t\t\tgps.f_get_position(&lat,&lon); // get latitude and longitude \n  \t\t}\n\t} \n\n}",
+			"file": "examples/mainApp/GPS.cpp",
+			"file_size": 239,
+			"file_write_time": 131708610538822466,
+			"settings":
+			{
+				"buffer_size": 239,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "#include \"IMU.h\"\n\n\nint initialize()\n{\n\tWire.begin();\n\tmpu.initialize();\n\n\tif(mpu.testConnection() == 0) return -1;\n\n\tpinMode(INTERRUPT_PIN, INPUT);\n\n\tdevStatus = mpu.dmpInitialize();\n\n\t// supply your own gyro offsets here, scaled for min sensitivity\n    mpu.setXGyroOffset(-8); //220\n    mpu.setYGyroOffset(-25); //76\n    mpu.setZGyroOffset(16); //-85\n    mpu.setZAccelOffset(2689); // 1688 factory default for my test chip\n\n    if (devStatus == 0) \n    {\n    \t// turn on the DMP, now that it's ready\n        mpu.setDMPEnabled(true);\n\n        // enable Arduino interrupt detection\n        attachInterrupt(digitalPinToInterrupt(INTERRUPT_PIN), dmpDataReady, RISING);\n        mpuIntStatus = mpu.getIntStatus();\n\n        // set our DMP Ready flag so the main loop() function knows it's okay to use it\n        //Serial.println(F(\"DMP ready! Waiting for first interrupt...\"));\n        dmpReady = true;\n\n        // get expected DMP packet size for later comparison\n        packetSize = mpu.dmpGetFIFOPacketSize();\n\n    }\n    else\n    {\n    \treturn -1;\n    }\n\n}\n\n\nvoid getAccData()\n{\n\n    uint16_t fifoCount;     // count of all bytes currently in FIFO\n\n\n    // get current FIFO count\n    fifoCount = mpu.getFIFOCount();\n\n\n    // wait for MPU interrupt or extra packet(s) available\n    if(mpuInterrupt && fifoCount >= packetSize)\n    {\n        // reset interrupt flag and get INT_STATUS byte\n        mpuInterrupt = false;\n        mpuIntStatus = mpu.getIntStatus();\n\n\n        // get current FIFO count\n        fifoCount = mpu.getFIFOCount();\n\n        // check for overflow (this should never happen unless our code is too inefficient)\n        if ((mpuIntStatus & 0x10) || fifoCount == 1024)\n            // reset so we can continue cleanly\n            mpu.resetFIFO();\n\n        else if (mpuIntStatus & 0x02) \n        {\n            // wait for correct available data length, should be a VERY short wait\n            while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();\n\n            // read a packet from FIFO\n            mpu.getFIFOBytes(fifoBuffer, packetSize);\n            \n            mpu.dmpGetQuaternion(&q, fifoBuffer);\n        \n        }\n    }   \t\n\n}\n\nvoid dmpDataReady() {\n    mpuInterrupt = true;\n}\n",
+			"file": "examples/mainApp/IMU.cpp",
+			"file_size": 2207,
+			"file_write_time": 131711343003781915,
+			"settings":
+			{
+				"buffer_size": 2207,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "examples/mainApp/UltrassonicLib.cpp",
+			"settings":
+			{
+				"buffer_size": 214,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "#ifndef IMU_H_\n#define IMU_H_\n\n#include <I2Cdev.h>\n#include <MPU6050_6Axis_MotionApps20.h>\n\n// Arduino Wire library is required if I2Cdev I2CDEV_ARDUINO_WIRE implementation\n// is used in I2Cdev.h\n#if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE\n    #include \"Wire.h\"\n#endif\n\n#define INTERRUPT_PIN 12  // use pin 2 on Arduino Uno & most boards\n\n// class default I2C address is 0x68\n// specific I2C addresses may be passed as a parameter here\n// AD0 low = 0x68 (default for SparkFun breakout and InvenSense evaluation board)\n// AD0 high = 0x69\n    MPU6050 mpu;\n\nbool dmpReady = false;  // set true if DMP init was successful\nbool mpuInterrupt = false;\nuint8_t mpuIntStatus;   // holds actual interrupt status byte from MPU\nuint8_t devStatus;      // return status after each device operation (0 = success, !0 = error)\nuint16_t packetSize;    // expected DMP packet size (default is 42 bytes)\nuint16_t fifoCount;     // count of all bytes currently in FIFO\nuint8_t fifoBuffer[64]; // FIFO storage buffer\n\nQuaternion q;           // [w, x, y, z]         quaternion container\n\nint initialize();\nvoid getAccData();\nvoid dmpDataReady();\n\n#endif\n",
+			"file": "examples/mainApp/IMU.h",
+			"file_size": 1138,
+			"file_write_time": 131711351690699560,
+			"settings":
+			{
+				"buffer_size": 1138,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"last_filter": "mark",
+		"selected_items":
+		[
+			[
+				"mark",
+				"Markdown Preview: Preview in Browser"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"install ",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 461.0
+	},
+	"console":
+	{
+		"height": 130.0,
+		"history":
+		[
+			"os.system(\"cls\")",
+			"import os",
+			"os.system(\"cls\")",
+			"clear",
+			"clc",
+			"import urllib.request,os,hashlib; h = '6f4c264a24d933ce70df5dedcf1dcaee' + 'ebe013ee18cced0ef93d5f746d80ef60'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/inazawalabs/gitProj/affective_cane/Software/examples",
+		"/home/inazawalabs/gitProj/affective_cane/Software/examples/mainApp"
+	],
+	"file_history":
+	[
+		"/home/inazawalabs/gitProj/affective_cane/Software/examples/main App/GPS.cpp",
+		"/home/inazawalabs/gitProj/affective_cane/Software/examples/main App/mainApp.ino",
+		"/home/inazawalabs/gitProj/affective_cane/Software/examples/DHT22LibExample/DHT22LibExample.ino",
+		"/home/inazawalabs/gitProj/affective_cane/Software/examples/main App/DHT.h",
+		"/home/inazawalabs/gitProj/affective_cane/Software/examples/main App/DHT.cpp",
+		"/home/inazawalabs/gitProj/affective_cane/Software/examples/main App/ADC.h",
+		"/home/inazawalabs/gitProj/affective_cane/Software/examples/IMULibExample/DHT.h",
+		"/home/inazawalabs/gitProj/affective_cane/Software/examples/main App/IMU.cpp",
+		"/home/inazawalabs/gitProj/affective_cane/Software/examples/main App/IMU.h",
+		"/home/inazawalabs/gitProj/affective_cane/Software/examples/DHT22LibExample/DHT.cpp",
+		"/home/inazawalabs/gitProj/affective_cane/Software/examples/DHT22LibExample/DHT.h",
+		"/home/inazawalabs/gitProj/affective_cane/Software/examples/main App/UltrassonicLib.cpp",
+		"/home/inazawalabs/gitProj/affective_cane/Software/examples/main App/GPS.h",
+		"/home/inazawalabs/gitProj/affective_cane/Software/examples/IMULibExample/Thermistor.h",
+		"/home/inazawalabs/gitProj/affective_cane/Software/examples/IMULibExample/Thermistor.cpp",
+		"/home/inazawalabs/gitProj/affective_cane/Software/examples/main App/UltrassonicLib.h",
+		"/home/inazawalabs/gitProj/affective_cane/Software/examples/UltrasonicLibExample/UltrasonicLibExample.ino",
+		"/home/inazawalabs/gitProj/Py_AFE4490/AFE_DATA_ANALYSIS.py",
+		"/home/inazawalabs/gitProj/Py_AFE4490/PlotTwoOximeters.py",
+		"/home/inazawalabs/gitProj/Py_AFE4490/Data_2",
+		"/home/inazawalabs/gitProj/Py_AFE4490/test4.py",
+		"/home/inazawalabs/Documents/VersionedProjects/PulseOx/window.py",
+		"/home/inazawalabs/Documents/VersionedProjects/PulseOx/main.py",
+		"/home/inazawalabs/gitProj/Py_AFE4490/AFE4490SPO2EVM.py",
+		"/home/inazawalabs/gitProj/Py_AFE4490/test2.py",
+		"/home/inazawalabs/Documents/VersionedProjects/Py_AFE4490/test.py",
+		"/home/inazawalabs/Documents/VersionedProjects/Py_AFE4490/PlotTest1.py",
+		"/home/inazawalabs/Documents/VersionedProjects/Py_AFE4490/test4.py",
+		"/home/inazawalabs/Documents/VersionedProjects/Py_AFE4490/Data",
+		"/media/inazawalabs/root/home/pi/PulseOx/main.py",
+		"/home/inazawalabs/Documents/VersionedProjects/Py_AFE4490/AFE4490SPO2EVM.py",
+		"/home/inazawalabs/Documents/VersionedProjects/Py_AFE4490/README.md",
+		"/home/inazawalabs/Documents/VersionedProjects/STF/Expert-System/tree_DB.pickle",
+		"/home/inazawalabs/Documents/VersionedProjects/STF/Expert-System/decision_tree.py",
+		"/home/inazawalabs/gnome-pomodoro/autogen.sh",
+		"/home/inazawalabs/Documents/VersionedProjects/STF/Features.txt",
+		"/home/inazawalabs/Documents/VersionedProjects/STF/decision_tree.py",
+		"/home/inazawalabs/Documents/VersionedProjects/overview/Dockerfile",
+		"/home/inazawalabs/Documents/VersionedProjects/overview/dev.setup.sh",
+		"/home/inazawalabs/Documents/VersionedProjects/overview/Docke",
+		"/home/inazawalabs/.config/sublime-text-3/Packages/User/Python.sublime-settings"
+	],
+	"find":
+	{
+		"height": 38.0
+	},
+	"find_in_files":
+	{
+		"height": 98.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": true,
+		"find_history":
+		[
+			"qua",
+			"quater",
+			"IMU",
+			"dmpDataReady",
+			"+",
+			"h",
+			"mpuInterrupt",
+			"delay",
+			"ledData",
+			"stopEVMADC",
+			"isReading",
+			"keepReading",
+			"readFromEVM",
+			"self.ledData",
+			"stopEVMADC",
+			"isReading",
+			"writeTo",
+			"threadin",
+			"counter",
+			"bpm",
+			"fig",
+			"print",
+			"  ",
+			"       -",
+			"        ",
+			"\\n",
+			"])\n",
+			"le",
+			"OX_2",
+			"self.lock1",
+			"Sec",
+			"samples",
+			"performance",
+			"daemon",
+			"LockSerialPort",
+			"read",
+			"numpy",
+			"lastEVMReading",
+			"HasNewPck",
+			"getEVMId",
+			"queue",
+			"hasNewPck",
+			"8593407,13967359,",
+			"8593407,",
+			"8593407, 13967359, 4457240, 1638781",
+			"getEVM",
+			"get",
+			"')\n",
+			"KeepReading",
+			"print",
+			"print(",
+			"LED1Data",
+			"print",
+			"HasNewPck",
+			"len(",
+			"readfromevm",
+			"GetE",
+			"print",
+			"getEVMId",
+			"time.pause",
+			"ok!",
+			"print",
+			"input()",
+			"input",
+			"() ",
+			"readFromEVM",
+			"#define",
+			"DataAccessLock"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": true,
+		"replace_history":
+		[
+			"",
+			"\\n",
+			"",
+			",\\n",
+			"OX2",
+			""
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": true,
+		"wrap": true
+	},
+	"folders":
+	[
+		{
+			"path": "/home/inazawalabs/gitProj/affective_cane/Software/examples"
+		}
+	],
+	"groups":
+	[
+		{
+			"selected": 4,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "examples/main App/GPS.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 164,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								86,
+								89
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "examples/IMULibExample/DHT.cpp",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 4012,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								208,
+								208
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "/home/inazawalabs/Downloads/get-pip.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1642328,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1642328,
+								1642328
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 288152.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "/home/inazawalabs/Documents/VersionedProjects/affective_cane/Software/libs/i2cdevlib/Arduino/MPU6050/MPU6050.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 44338,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2384,
+								2384
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 546.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "/home/inazawalabs/Documents/VersionedProjects/affective_cane/Software/examples/mainApp/Visualization.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 320,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								308,
+								308
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": ".",
+									"selector": "source.python - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								}
+							],
+							"syntax": "Packages/Python/Python.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 5,
+					"file": "/home/inazawalabs/Documents/VersionedProjects/affective_cane/Software/libs/i2cdevlib/Arduino/MPU6050/MPU6050_6Axis_MotionApps20.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 41760,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1743,
+								1743
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1722.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1032,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								119,
+								120
+							]
+						],
+						"settings":
+						{
+							"auto_name": "Lista de Periféricos:",
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 308.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "examples/IMULibExample/IMULibExample.ino",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 17530,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3227,
+								3227
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 252.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 12,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "examples/mainApp/DHT.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4012,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 14,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "examples/mainApp/mainApp.ino",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 9670,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 966.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 11,
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "examples/mainApp/GPS.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 165,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 10,
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "examples/mainApp/GPS.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 239,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "examples/mainApp/IMU.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2207,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 13,
+					"file": "examples/mainApp/UltrassonicLib.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 214,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								27,
+								27
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 14,
+					"file": "examples/mainApp/IMU.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1138,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								242,
+								242
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 13,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 38.0
+	},
+	"input":
+	{
+		"height": 45.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			0.617173417527,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "",
+	"replace":
+	{
+		"height": 40.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 1,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 246.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
