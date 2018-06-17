@@ -24,8 +24,7 @@ uint8_t mpuIntStatus;   // holds actual interrupt status byte from MPU
 uint8_t devStatus;      // return status after each device operation (0 = success, !0 = error)
 uint16_t packetSize;    // expected DMP packet size (default is 42 bytes)
 uint16_t fifoCount;     // count of all bytes currently in FIFO
-uint8_t fifoBuffer[64]; // FIFO storage buffer
-
+uint8_t fifoBuffer[64]; // FIFO storage buffer 
 Quaternion q;           // [w, x, y, z]         quaternion container
 /*********************/
 
@@ -56,11 +55,11 @@ bool CanRead[3];
 
 // This is the fastest interrupt. 
 // Currently is measured in Microssecond
-#define READER_LOWER_TIMER 1000  // 1000 us = 1 ms or 100 hz
+#define READER_LOWER_TIMER 10000  // 10000 us = 10 ms or 100 hz
 
 // This value is based on the accumulated 
 // amount of the READER_LOWER_TIMER
-#define READER_MIDDLE_TIMER 1000 // 1000 x READER_LOWER_TIMER = 1 second
+#define READER_MIDDLE_TIMER 100 // 100 x READER_LOWER_TIMER = 1 second
 
 // This value is based on the accumulated 
 // amount of the READER_MIDDLE_TIMER 
@@ -79,7 +78,7 @@ bool CanRead[3];
 
 //LOCATION MODULE
 //#define READ_DISTANCE_TO_FLOOR // HCSR04 
-//#define READ_QUATERNIONS //MPU6050
+#define READ_QUATERNIONS //MPU6050
 //#define READ_GPS //UBLOX 6
 //
 ////AMBIENTAL MODULE
@@ -88,7 +87,7 @@ bool CanRead[3];
 //#define READ_AMBLIGHT  // 7
 
 //Protocolo:
-// COisas que tem 2 dados: manda ID \n dado1 \n Dado2\n dado3\n dado4\n
+// COisas que tem 2 ou + dados: manda ID \n dado1 \n Dado2\n dado3\n dado4\n
 // Coisas que tem 1 dado : Manda ID \n dado1 \n
 
 
@@ -100,8 +99,9 @@ void setup(){
 	// Setup the first timers
 	Timer1.initialize(READER_LOWER_TIMER); // our interrupts will start each 1 ms (1000 samples/second)
 	Timer1.attachInterrupt(interruptManager);
-  
-  if(initializeMPU()){}
+
+  //Serial.println("Initializing MPU....");
+  while(!initializeMPU()){}
 
 //  Serial.println("MPU_OK");
   gpsSerial.begin(GPS_Serial_Baud);
@@ -120,7 +120,7 @@ void setup(){
     welcomePage();
   } while( u8g.nextPage() );
 
-//  Serial.println("Tela OK");
+ Serial.println("Waiting Click");
   while(analogRead(FSR_PORT) > 600);
 //    Serial.println(analogRead(FSR_PORT));
 }
@@ -164,10 +164,26 @@ void loop()
 		#ifdef READ_QUATERNIONS
 
 			//Run getAccData to stock results in global variable q
-			getAccData();
+			if (getAccData())
+      {
+        //push the protocol code of the rxData. 
+        rxData.push(9);
 
-			//push the protocol code of the rxData. 
-			rxData.push(9);
+        data = (int) (q.w*100);
+        rxData.push(data);
+
+        data = (int) (q.x*100);
+        rxData.push(data);
+
+        data = (int) (q.y*100);
+        rxData.push(data);
+
+        data = (int) (q.z*100);
+        rxData.push(data);
+
+      }
+
+			
 
 		#endif
 
@@ -272,7 +288,8 @@ void loop()
 
   
   u8g.firstPage();  
-  do {
+  do 
+  {
     switch(screen)
     {
       case 1:
@@ -333,7 +350,7 @@ int initializeMPU()
   Wire.begin();
   mpu.initialize();
 
-  if(mpu.testConnection() == 0) return -1;
+  if(mpu.testConnection() == 0) Serial.println("mpu.testConnection is bad...");
 
   pinMode(INTERRUPT_PIN, INPUT);
 
@@ -364,6 +381,7 @@ int initializeMPU()
         return 1;
 
     }
+
     else
     {
       return 0;
@@ -372,19 +390,19 @@ int initializeMPU()
 }
 
 
-void getAccData()
-{
-
+bool getAccData()
+{  
     uint16_t fifoCount;     // count of all bytes currently in FIFO
-
 
     // get current FIFO count
     fifoCount = mpu.getFIFOCount();
-    // wait for MPU interrupt or extra packet(s) available
-    //if(mpuInterrupt && fifoCount >= packetSize)
-    if(fifoCount >= packetSize)
-    {
 
+    //check MPU status:
+    mpuIntStatus = mpu.getIntStatus();
+
+    // wait for MPU interrupt or extra packet(s) available
+    if((mpuIntStatus & 0x02) && fifoCount >= packetSize)
+    {
         // reset interrupt flag and get INT_STATUS byte
         mpuInterrupt = false;
         mpuIntStatus = mpu.getIntStatus();
@@ -395,6 +413,7 @@ void getAccData()
 
         // check for overflow (this should never happen unless our code is too inefficient)
         if ((mpuIntStatus & 0x10) || fifoCount == 1024)
+            
             // reset so we can continue cleanly
             mpu.resetFIFO();
 
@@ -409,8 +428,9 @@ void getAccData()
             
             mpu.dmpGetQuaternion(&q, fifoBuffer);
 
+
             //Envia multiplicado por 100
-           /* Serial.print("W: ");
+            /*Serial.print("W: ");
             Serial.println(q.w);
             
             Serial.print("X: ");
@@ -421,13 +441,17 @@ void getAccData()
             
             Serial.print("Z: ");
             Serial.println(q.z);
-        */
+            */
+            return true;
         }
-    }     
+    }
+         return false;
 
 }
 
-void dmpDataReady() {
+void dmpDataReady()
+{
+  
     mpuInterrupt = true;
 }
 
@@ -468,7 +492,8 @@ void getGPSPosition()
 }
 
 
-void welcomePage(void) {
+void welcomePage(void) 
+{
 // graphic commands to redraw the complete screen should be placed here  
   //u8g.setFont(u8g_font_unifont);
   u8g.setFont(u8g_font_profont12);
