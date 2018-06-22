@@ -90,8 +90,6 @@ bool CanRead[3];
 // COisas que tem 2 ou + dados: manda ID \n dado1 \n Dado2\n dado3\n dado4\n
 // Coisas que tem 1 dado : Manda ID \n dado1 \n
 
-
-
 /*****/
 void setup(){	
 
@@ -123,6 +121,14 @@ void setup(){
  Serial.println("Waiting Click");
   while(analogRead(FSR_PORT) > 600);
 //    Serial.println(analogRead(FSR_PORT));
+
+  u8g.firstPage();  
+  do {
+    ReadingPage();
+  } while( u8g.nextPage() );
+
+//    Serial.println(analogRead(FSR_PORT));
+
 }
 
 void loop()
@@ -277,42 +283,58 @@ void loop()
 	while (!rxData.isEmpty()){
       
       pck = (rxData.dequeue());
-
+      
+      Serial.println();
       Serial.println();
       Serial.println(pck);
-      
-        if(pck == 1 || pck == 2 || pck == 3)
-          
+
+      switch(pck)
+      {
+        case 1:
+        case 2:
+        case 3:
+
           Serial.println(rxData.dequeue());
+          break;
+
+        case 9:
+
+          for(int i=0; i <4; i++)
+            Serial.println(rxData.dequeue());
+          break;
+
+      }
+      
+          
    }
 
   
-  u8g.firstPage();  
-  do 
-  {
-    switch(screen)
-    {
-      case 1:
-      draw1();
-      break;
-      case 2:
-      draw2();
-      break;
-      case 3:
-      draw3();
-      break;
-      case 4:
-      draw4();
-      break;
-      default:
-      break;
-    }
-  } while( u8g.nextPage() );
+  // u8g.firstPage();  
+  // do 
+  // {
+  //   switch(screen)
+  //   {
+  //     case 1:
+  //     draw1();
+  //     break;
+  //     case 2:
+  //     draw2();
+  //     break;
+  //     case 3:
+  //     draw3();
+  //     break;
+  //     case 4:
+  //     draw4();
+  //     break;
+  //     default:
+  //     break;
+  //   }
+  // } while( u8g.nextPage() );
 
-  screen++;
+  // screen++;
 
-  if(screen > 4)
-    screen = 1;
+  // if(screen > 4)
+  //   screen = 1;
 }
   
 void interruptManager()
@@ -493,14 +515,20 @@ void getGPSPosition()
 
 
 void welcomePage(void) 
+{// graphic commands to redraw the complete screen should be placed here  
+  //u8g.setFont(u8g_font_unifont);
+  u8g.setFont(u8g_font_profont12);
+  u8g.drawStr( 20, 10, "Affective Cane!");
+  u8g.drawStr( 20, 23, "Waiting Press..");
+}
+
+void ReadingPage(void)
 {
 // graphic commands to redraw the complete screen should be placed here  
   //u8g.setFont(u8g_font_unifont);
   u8g.setFont(u8g_font_profont12);
-  u8g.drawStr( 20, 10, "Affective Cane!");
+  u8g.drawStr( 20, 10, "Sending Data...");
 
-  u8g.drawStr( 20, 23, "Press The Ground");
-  u8g.drawStr( 20, 30, "To Start...");
 }
 
 void draw1(void)
