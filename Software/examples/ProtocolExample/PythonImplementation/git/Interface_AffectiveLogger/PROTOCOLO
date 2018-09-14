@@ -1,0 +1,15 @@
+PROTOCOLO
+
+
+
+<00> SamplesPck - <2 bytes por leitura> 
+	<ID><NumberOfSamplesRates><SampleRate><SampleRate><SampleRate>...<Terminator>
+<01> GSR - 0 a 1024 <3bytes>
+<02> PO - 0 a 1024 <3bytes>
+<03> AccPck - 0 a 1 <4bytes, as a normal float>
+	<ID><NumberOfSamples-4><Accw><AccX><Accy><AccZ><Terminator>
+<04> FSR - 0 a 1024 <3bytes>
+
+ Finalizador = <\n>
+
+
