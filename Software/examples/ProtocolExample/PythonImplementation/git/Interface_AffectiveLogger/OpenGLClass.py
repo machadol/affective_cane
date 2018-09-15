@@ -70,7 +70,7 @@ class GLWidget(QtOpenGL.QGLWidget):
 
         timer = time.time()
 
-        print(timer - self.lasttime)
+        #print(timer - self.lasttime)
         self.lasttime = timer
         GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
         GL.glLoadIdentity()

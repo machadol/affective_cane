@@ -24,7 +24,7 @@ class SerialWatcher(QThread):
         self.PckId_ACC = b'\x03'
         self.PckId_TOUCH = 4
 
-        self.buffersize_tosavein_db = 10
+        self.buffersize_tosavein_db = 100
 
         self.serialport = SerialPort
         self.baudrate = BaudRate
@@ -74,28 +74,28 @@ class SerialWatcher(QThread):
         if(len(self.result_dict) > 0):
             for each in self.result_dict:
                 if(each['type'] == self.PckId_GSR):
-                    print("Chegou Pck GSR")
+                    #print("Chegou Pck GSR")
                     self.new_gsr_pck.emit(each['data'])
                     self.GSR_samplelist.append(each['data'])
                     if(len(self.GSR_samplelist) > self.buffersize_tosavein_db):
                         self.dbu_GSR.AddMultipleEntryToTable(self.GSR_samplelist)
                         self.GSR_samplelist[:] = []
                 elif(each['type'] == self.PckId_Pox):
-                    print("Chegou Pck Pox")
+                    #print("Chegou Pck Pox")
                     self.new_pox_pck.emit(each['data'])
                     self.POX_samplelist.append(each['data'])
                     if(len(self.POX_samplelist) > self.buffersize_tosavein_db):
                         self.dbu_POX.AddMultipleEntryToTable(self.POX_samplelist)
                         self.POX_samplelist[:] = []
                 elif(each['type'] == self.PckId_ACC):
-                    print("Chegou Pck ACC")
+                    #print("Chegou Pck ACC")
                     self.new_Acc_pck.emit(each['data'])
                     self.ACC_sampleList.append(each['data'])
                     if(len(self.ACC_sampleList) > self.buffersize_tosavein_db):
                         self.dbu_ACC.AddMultipleEntryToTable(self.ACC_sampleList)
                         self.ACC_sampleList[:] = []
                 elif(each['type'] == self.PckId_TOUCH):
-                    print("Chegou Pck TOUCH")
+                    #print("Chegou Pck TOUCH")
                     self.new_Touch_pck.emit(each['data'])
                     self.TOUCH_sampleList.append(each['data'])
                     if(len(self.TOUCH_sampleList) > self.buffersize_tosavein_db):
@@ -114,6 +114,8 @@ class SerialWatcher(QThread):
         self.dbu_GSR.closeConnections()
         self.dbu_POX.closeConnections()
         self.dbu_ACC.closeConnections()
+        self.dbu_TOUCH.closeConnections()
+        
 
         self.wait()
 

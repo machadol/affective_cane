@@ -7,6 +7,7 @@ from datetime import datetime
 from OpenGLClass import GLWidget as GLWidget
 from QuaternionsTest import *
 import time
+import serial.tools.list_ports
 
 class UI_App(QtGui.QWidget):
 
@@ -21,6 +22,8 @@ class UI_App(QtGui.QWidget):
 
         self.x_l = 10;
 
+        self.serialPortIndex = 0
+
     def buildWindow(self):
 
         self.setWindowTitle("Affective Logger By Pedro Inazawa")
@@ -33,12 +36,16 @@ class UI_App(QtGui.QWidget):
         self.RunButton.setCheckable(True)
         self.RunButton.clicked.connect(self.buttonClick)
 
-        self.ExperimentInfo = QtGui.QTextEdit()
+        self.ExperimentInfo = QtGui.QLineEdit()
         self.ExperimentInfo.setText("AffectiveLog_" + datetime.now().strftime('%d_%m_%Y_%H_%M'))
-
+        self.ExperimentSerialPort = QtGui.QLineEdit()
+        self.ExperimentSerialPort.setText("Inserir Porta Serial ou pressione ENTER...")
+        self.ExperimentSerialPort.returnPressed.connect(self.fillSerialPort)
 
         InfoGrid.addWidget(self.RunButton)
         InfoGrid.addWidget(self.ExperimentInfo)
+        InfoGrid.addWidget(self.ExperimentSerialPort)
+        InfoGrid.setMargin(20)
 
         Infogroupbox = QtGui.QGroupBox('INFO')
         Infogroupbox.setStyleSheet("QGroupBox { border: 1px solid black;}")
@@ -123,14 +130,14 @@ class UI_App(QtGui.QWidget):
         self.GSRSampleIndex = 0 
 
     def connectToQThread(self):
-        self.readerThread = SerialWatcher('/dev/ttyUSB1', 115200, 100)
+        self.readerThread = SerialWatcher(self.ExperimentSerialPort.text(), 115200, 100)
         
         self.readerThread.new_gsr_pck.connect(self.GSR_Update_Plot)
         self.readerThread.new_pox_pck.connect(self.POX_Update_Plot)
         self.readerThread.new_Acc_pck.connect(self.ACC_Update_Plot)
         self.readerThread.new_Touch_pck.connect(self.TOUCH_Update_Plot)
 
-        self.readerThread.create_db(self.ExperimentInfo.toPlainText())
+        self.readerThread.create_db(self.ExperimentInfo.text())
         self.readerThread.start_watcher()
 
     def disconnectFromQThread(self):
@@ -179,7 +186,7 @@ class UI_App(QtGui.QWidget):
 
         print("ACC Update")
 
-        print(Quat_List)
+        #print(Quat_List)
         # First transform to Quaternion
         q = Quaternion(Quat_List[0],Quat_List[1],Quat_List[2], Quat_List[3])
 
@@ -188,9 +195,9 @@ class UI_App(QtGui.QWidget):
         x = convert_to_degrees(e.x)
         y = convert_to_degrees(e.y)
         z = convert_to_degrees(e.z)
-        print(x)
-        print(y)
-        print(z)
+        #print(x)
+        #print(y)
+        #print(z)
         
         time1 = time.time()
 
@@ -210,7 +217,7 @@ class UI_App(QtGui.QWidget):
         #self.Locational_RotationalImg.setYRotation(y)
         
         time2 = time.time() 
-        print(time2 - time1)
+        #print(time2 - time1)
 
     def TOUCH_Update_Plot(self, touchStatus):
         if(touchStatus == 1):
@@ -230,6 +237,16 @@ class UI_App(QtGui.QWidget):
             self.disconnectFromQThread()
             self.RunButton.setText("START\nLOGGING")
 
+    def fillSerialPort(self):
+        
+        print("Checking serial ports...")
+        ports = list(serial.tools.list_ports.comports())
+        
+        if len(ports) == 0:
+            self.ExperimentSerialPort.setText("Nenhuma Porta Encontrada...")
+        else:
+            P = ports[0]
+            self.ExperimentSerialPort.setText(P[0])
 
         
 if __name__ == "__main__":
