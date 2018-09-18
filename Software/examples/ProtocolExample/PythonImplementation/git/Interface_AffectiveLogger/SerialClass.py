@@ -6,6 +6,16 @@ from PyQt4 import QtGui, QtCore
 import random
 import DB_manager
 from QuaternionsTest import *
+import threading
+
+class RecordInDB(threading.Thread):
+    def __init__(self, DBObj, DB_Data):
+        super(RecordInDB, self).__init__()
+        self.DBObj = DBObj
+        self.DB_Data = DB_Data
+
+    def run(self):
+        self.DBObj.AddMultipleEntryToTable(self.DB_Data)
 
 class SerialWatcher(QThread):
 
@@ -32,6 +42,8 @@ class SerialWatcher(QThread):
 
         self.PD = ProtocolDecoder(self.serialport, self.baudrate)
 
+        self.db_Threads = []
+
     def create_db(self, db):
 
         self.dbu_GSR = DB_manager.DatabaseUtility(db, 'GSR')
@@ -40,7 +52,7 @@ class SerialWatcher(QThread):
         self.dbu_TOUCH = DB_manager.DatabaseUtility(db, 'TOUCH')
 
         self.GSR_samplelist = []
-        self.POX_samplelist = []
+        self.POX_sampleList = []
         self.ACC_sampleList = []
         self.TOUCH_sampleList = []
 
@@ -78,34 +90,47 @@ class SerialWatcher(QThread):
                     self.new_gsr_pck.emit(each['data'])
                     self.GSR_samplelist.append(each['data'])
                     if(len(self.GSR_samplelist) > self.buffersize_tosavein_db):
-                        self.dbu_GSR.AddMultipleEntryToTable(self.GSR_samplelist)
+                        testGSR = RecordInDB(self.dbu_GSR,self.GSR_samplelist)
+                        self.db_Threads.append(testGSR)
                         self.GSR_samplelist[:] = []
+
                 elif(each['type'] == self.PckId_Pox):
                     #print("Chegou Pck Pox")
                     self.new_pox_pck.emit(each['data'])
-                    self.POX_samplelist.append(each['data'])
-                    if(len(self.POX_samplelist) > self.buffersize_tosavein_db):
-                        self.dbu_POX.AddMultipleEntryToTable(self.POX_samplelist)
-                        self.POX_samplelist[:] = []
+                    self.POX_sampleList.append(each['data'])
+                    if(len(self.POX_sampleList) > self.buffersize_tosavein_db):
+                        testPOX = RecordInDB(self.dbu_POX,self.POX_sampleList)
+                        self.db_Threads.append(testPOX)
+                        self.POX_sampleList[:] = []
                 elif(each['type'] == self.PckId_ACC):
                     #print("Chegou Pck ACC")
                     self.new_Acc_pck.emit(each['data'])
                     self.ACC_sampleList.append(each['data'])
                     if(len(self.ACC_sampleList) > self.buffersize_tosavein_db):
-                        self.dbu_ACC.AddMultipleEntryToTable(self.ACC_sampleList)
+                        testACC = RecordInDB(self.dbu_ACC,self.ACC_sampleList)
+                        self.db_Threads.append(testACC)
                         self.ACC_sampleList[:] = []
                 elif(each['type'] == self.PckId_TOUCH):
                     #print("Chegou Pck TOUCH")
                     self.new_Touch_pck.emit(each['data'])
                     self.TOUCH_sampleList.append(each['data'])
                     if(len(self.TOUCH_sampleList) > self.buffersize_tosavein_db):
-                        self.dbu_TOUCH.AddMultipleEntryToTable(self.TOUCH_sampleList)
+                        testTOUCH = RecordInDB(self.dbu_TOUCH,self.TOUCH_sampleList)
+                        self.db_Threads.append(testTOUCH)
                         self.TOUCH_sampleList[:] = []
                 else:
                     print("Tipo nao Reconhecido")
                     print(each['type'])
+            
+            if(len(self.db_Threads) > 0):
+                for th in self.db_Threads:
+                    th.start()
 
-                    pass
+                for th in self.db_Threads:
+                    th.join()
+
+                self.db_Threads[:] = []
+
     def stop_thread(self):
 
         print("Watcher is being killed.")
