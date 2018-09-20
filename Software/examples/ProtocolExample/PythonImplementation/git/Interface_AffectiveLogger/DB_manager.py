@@ -80,25 +80,27 @@ class DatabaseUtility:
 		self.RunCommand(cmd)
 
 	def AddMultipleEntryToTable(self, message):
-		date1 = datetime.now().strftime("%y-%m-%d")
-		time = datetime.now().strftime("%H:%M")
+		if(len(message) > 0):
+			date1 = datetime.now().strftime("%y-%m-%d")
+			time = datetime.now().strftime("%H:%M:%S")
+			cmd = " INSERT INTO " + self.tableName + " (date, time, message) VALUES "
+			for each in message[:-2]:
+				cmd += " ('%s', '%s', '%s' )," % (date1, time, each)
 
-		cmd = " INSERT INTO " + self.tableName + " (date, time, message) VALUES "
-		
-		for each in message[:-2]:
-			cmd += " ('%s', '%s', '%s' )," % (date1, time, each)
+			cmd += "('%s', '%s', '%s' );" % (date1, time, message[-1])
 
-		cmd += "('%s', '%s', '%s' );" % (date1, time, message[-1])
-
-		self.RunCommand(cmd)
+			self.RunCommand(cmd)
+		else:
+			print('DB - AddMultipleEntryToTable len(message) == 0')
 
 	def __del__(self):
-		self.cnx.commit()
-		self.cursor.close()
-		self.cnx.close()
+		pass
+		#self.cnx.commit()
+		#self.cursor.close()
+		#self.cnx.close()
 
 	def closeConnections(self):
-		print("Closing Connection. ")
+		#print("Closing Connection. ")
 		self.cnx.commit()
 		self.cursor.close()
 		self.cnx.close()

@@ -70,7 +70,7 @@ class ProtocolDecoder:
 
                             ReadMessage = ReadMessage[BytesAtBeggining+ 2*NumberOfSamples+1: ]
                             ReadMessage = ReadMessage[1:]
-                            print('Got a List!')
+                            #print('Got a List!')
                         else:
                             print('skipping... Terminator Not Found')
                             ReadMessage = ReadMessage[1:]
@@ -87,7 +87,7 @@ class ProtocolDecoder:
                         if(ReadMessage[BytesAtBeggining+1] == ord(pckTerminator)):
 
                             info = {"type": ReadMessage[0], "data": int.from_bytes(ReadMessage[1:3], byteorder='little')}
-                            print('Got a Int!')
+                            #print('Got a Int!')
                             ListOfMessages.append(info)
 
                             ReadMessage = ReadMessage[BytesAtBeggining+2:]
@@ -99,7 +99,7 @@ class ProtocolDecoder:
                         print('Skipping... Not big enough')
                         ReadMessage = ReadMessage[1:]
 
-                elif(ReadMessage[0] == ord(b'\x03') and len(ReadMessage) > 2):
+                elif((ReadMessage[0] == ord(b'\x03') or ReadMessage[0] == ord(b'\x05')) and len(ReadMessage) > 2):
                     
                     #If enters here, we got a Float array pck
 
@@ -112,11 +112,11 @@ class ProtocolDecoder:
 
                     if(len(ReadMessage) >= BytesAtBeggining + 4*NumberOfSamples + 1):
 
+                        pckType = ReadMessage[0]
                         ReadMessage = ReadMessage[BytesAtBeggining:]
 
                         if(ReadMessage[4*NumberOfSamples] == ord(pckTerminator)):
-                            
-
+                        
                             data = []
 
                             for each in range(0,NumberOfSamples):
@@ -124,8 +124,8 @@ class ProtocolDecoder:
                                 TupleOutput = struct.unpack('f',ReadMessage[0:4]) 
                                 data.append( TupleOutput[0])
                                 ReadMessage = ReadMessage[4:]
-                                
-                            info = {"type": b'\x03', "data": data}
+
+                            info = {"type": pckType, "data": data}
                             #Just skip the last char
                             ReadMessage = ReadMessage[1:]
                             ListOfMessages.append(info)

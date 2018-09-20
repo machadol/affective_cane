@@ -9,6 +9,8 @@ PROTOCOLO
 <03> AccPck - 0 a 1 <4bytes, as a normal float>
 	<ID><NumberOfSamples-4><Accw><AccX><Accy><AccZ><Terminator>
 <04> FSR - 0 a 1024 <3bytes>
+<05> AmbPck - <2 bytes, floats>
+	<ID><NumberOfSamples-2><Hum><Temp><Term>
 
  Finalizador = <\n>
 

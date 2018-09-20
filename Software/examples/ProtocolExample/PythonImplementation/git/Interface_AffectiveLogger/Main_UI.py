@@ -60,7 +60,8 @@ class UI_App(QtGui.QWidget):
         
         Locational_Grid = QtGui.QVBoxLayout()
         self.Locational_RotationalImg =  GLWidget() 
-        self.Locational_Data = QtGui.QTextEdit() 
+        self.Locational_Data = QtGui.QTextEdit()
+        self.Locational_Data.setText("Nenhum Pckt Recebido Ainda...") 
         Locational_Grid.addWidget(self.Locational_RotationalImg)
         Locational_Grid.addWidget(self.Locational_Data)
         Locational_Grid.setMargin(20)
@@ -69,13 +70,13 @@ class UI_App(QtGui.QWidget):
 
         AmbientalGroupBox = QtGui.QGroupBox('AMBIENTAL')
         Ambiental_Grid = QtGui.QVBoxLayout()
-        Ambiental_Graph1 = QtGui.QTextEdit() 
-        Ambiental_Graph2 = QtGui.QTextEdit() 
-        Ambiental_Graph3 = QtGui.QTextEdit() 
+        self.Ambiental_Graph1 = QtGui.QTextEdit()
+        self.Ambiental_Graph1.setText("Nenhum Pacote Ainda...") 
+        self.Ambiental_Graph2 = QtGui.QTextEdit() 
+        self.Ambiental_Graph2.setText("Nenhum Pacote Ainda...")
 
-        Ambiental_Grid.addWidget(Ambiental_Graph1)
-        Ambiental_Grid.addWidget(Ambiental_Graph2)
-        Ambiental_Grid.addWidget(Ambiental_Graph3)
+        Ambiental_Grid.addWidget(self.Ambiental_Graph1)
+        Ambiental_Grid.addWidget(self.Ambiental_Graph2)
         Ambiental_Grid.setMargin(20)
 
         AmbientalGroupBox.setLayout(Ambiental_Grid)
@@ -136,6 +137,7 @@ class UI_App(QtGui.QWidget):
         self.readerThread.new_pox_pck.connect(self.POX_Update_Plot)
         self.readerThread.new_Acc_pck.connect(self.ACC_Update_Plot)
         self.readerThread.new_Touch_pck.connect(self.TOUCH_Update_Plot)
+        self.readerThread.new_Amb_pck.connect(self.AMB_Update_Plot)
 
         self.readerThread.create_db(self.ExperimentInfo.text())
         self.readerThread.start_watcher()
@@ -184,7 +186,7 @@ class UI_App(QtGui.QWidget):
 
     def ACC_Update_Plot(self, Quat_List):
 
-        print("ACC Update")
+        #print("ACC Update")
 
         #print(Quat_List)
         # First transform to Quaternion
@@ -220,11 +222,12 @@ class UI_App(QtGui.QWidget):
         #print(time2 - time1)
 
     def TOUCH_Update_Plot(self, touchStatus):
-        if(touchStatus == 1):
-            self.Locational_Data.setText("TOQUE NO SOLO")
-        else:
-            self.Locational_Data.setText("-")
+        
+            self.Locational_Data.setText("TOQUE:\n" + str(touchStatus))
 
+    def AMB_Update_Plot(self, ambStatus):
+        self.Ambiental_Graph1.setText("Umidade: \n" + "{0:.2f}".format(ambStatus[0]))
+        self.Ambiental_Graph2.setText("Temperatura: \n" + "{0:.2f}".format(ambStatus[1]))
 
     def buttonClick(self):
 
