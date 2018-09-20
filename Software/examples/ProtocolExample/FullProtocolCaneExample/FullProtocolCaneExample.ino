@@ -2,11 +2,18 @@
 #include "MPU6050_6Axis_MotionApps20.h"
 
 #include "ArPy_Remote.h"
+#include "dht.h"
 #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
     #include "Wire.h"
 #endif
 
 MPU6050 mpu;
+
+/*DHT Defs*/
+dht DHT;
+
+#define DHT22_PIN 11
+
 
 /* =========================================================================
    NOTE: In addition to connection 3.3v, GND, SDA, and SCL, this sketch
@@ -61,7 +68,8 @@ unsigned long samplesCount2=0;
 unsigned long ADCTimer1 = 0 ;
 unsigned long LowRangeTimer = 0;
 ProtocolEncoder PE = ProtocolEncoder();
-float ACCArray[4];
+float ACCArray[4]; // Floats of the Quartenions of the ACC
+float AMBArray[2]; // Floats of the Ambient (Humidity and Temp)
 
 int GSR = 0;
 int Pulse = 0;
@@ -107,10 +115,12 @@ void setup_MPU()
     devStatus = mpu.dmpInitialize();
 
     // supply your own gyro offsets here, scaled for min sensitivity
-    mpu.setXGyroOffset(220);
-    mpu.setYGyroOffset(76);
-    mpu.setZGyroOffset(-85);
-    mpu.setZAccelOffset(1788); // 1688 factory default for my test chip
+    mpu.setXGyroOffset(41);
+    mpu.setYGyroOffset(10);
+    mpu.setZGyroOffset(17);
+    mpu.setXAccelOffset(-2395);
+    mpu.setYAccelOffset(1638);
+    mpu.setZAccelOffset(120); // 1688 factory default for my test chip
 
     // make sure it worked (returns 0 if so)
     if (devStatus == 0) {
@@ -143,10 +153,17 @@ void setup_MPU()
     pinMode(LED_PIN, OUTPUT);
   
   }
+
+void setup_DHT(){
+  
+  pinMode(DHT22_PIN, INPUT);
+  digitalWrite(DHT22_PIN, LOW);
+}
 void setup() {
     
     setup_Serial();
     setup_MPU();
+    setup_DHT();
 
     StartTime = millis();
 }
@@ -177,26 +194,21 @@ void loop() {
            Pulse = analogRead(A3);     // read the input pin
 
            // Touch
-           if(analogRead(A2) < 524)
-           {
-              Touch = 1; 
-           }
-           else
-           {
-            Touch = 0;
-            
-            }
-           
+
+           Touch = analogRead(A2);
            samplesCount2++; 
 
            
 
            PE.SendIntBytes(0x01,GSR,'\n');
            PE.SendIntBytes(0x02,Pulse,'\n');
-           //PE.SendIntBytes(0x04,Touch,'\n');
+           PE.SendIntBytes(0x04,Touch,'\n');
+           
+           LowRangeTimer = millis();
+
         }
 
-        if(ElapsedTime>= 1000)
+        if(ElapsedTime>= 3000)
         {
 //            Serial.print("Time: ");
 //            Serial.print(ElapsedTime);
@@ -207,9 +219,27 @@ void loop() {
 //            Serial.print(samplesCount1);
 //            Serial.print("Sample2: ");
 //            Serial.println(samplesCount2);
+            
+            int CHK = DHT.read22(DHT22_PIN);
 
+            switch(CHK){
+
+              case DHTLIB_OK:
+                AMBArray[0] = DHT.humidity;
+                AMBArray[1] = DHT.temperature;
+                break;
+              default:
+                AMBArray[0] = 0.0;
+                AMBArray[1] = 0.0;
+                break;
+
+            }
+            PE.SendFloatArray(0x05,AMBArray,2,'\n' );
+            
             samplesCount1 = 0;
             samplesCount2 = 0;
+
+            StartTime = millis();
             
         }
          
